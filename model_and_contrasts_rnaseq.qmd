@@ -1,0 +1,144 @@
+---
+title: "A guide to creating design matrices for gene expression experiments"
+format:
+  html:
+    df-print: paged
+---
+
+## **References**
+
+[A guide to creating design matrices for gene expression experiments](https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/designmatrices.html) (<https://f1000research.com/articles/9-1444/v1>)
+
+[RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR](https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/limmaWorkflow.html) (<https://f1000research.com/articles/5-1408/v3>)
+
+## XXX
+
+```{r}
+#| output: false
+library(tidyverse)
+library(magrittr)
+library(broom)
+library(marginaleffects)
+library(limma)
+
+theme_set(theme_bw())
+set.seed(1969)
+```
+
+```{r}
+mouse = paste0("MOUSE", 1:6)
+age = c(1,2,3,4,5,6)
+expression = 2 + 0.5 * age + rnorm(n=6, sd=0.1)
+data = tibble(mouse, expression, age)
+data
+```
+
+```{r}
+(mm = model.matrix(expression ~ 1 + age))
+```
+
+```{r}
+fit = lm(expression ~ 1 + age)
+tidy(fit)
+```
+
+```{r}
+model.name = paste0("E(y)=", round(fit$coef[1],2), "+", round(fit$coef[2],2), "*x")
+
+ggplot(data, aes(y = expression, x = age)) +
+  geom_point() +
+  geom_abline(intercept = fit$coef[1],
+              slope = fit$coef[2],
+              color = "red") +
+  labs(title = model.name,
+       y = "expression (y)",
+       x = "age (x)")
+```
+
+```{r}
+group = fct_relevel(rep(c("WT", "KO"), each = 3), "WT")
+data = tibble(mouse, expression, group)
+data
+```
+
+```{r}
+(mm = model.matrix(expression ~ 1 + group))
+```
+
+```{r}
+fit = lm(expression ~ 1 + group)
+tidy(fit)
+```
+
+```{r}
+model.name = paste0("E(y)=", round(fit$coef[1],2), "+", round(fit$coef[2],2), "*KO")
+
+ggplot(data, aes(y = expression, x = group)) +
+  geom_point() +
+  geom_hline(yintercept = fit$coef[1],
+             color = "red") +
+  geom_hline(yintercept = fit$coef[1] + fit$coef[2],
+             color = "blue") +
+  labs(title = model.name,
+       y = "expression (y)",
+       x = "group (x)")
+```
+
+```{r}
+(mm = model.matrix(expression ~ 0 + group))
+```
+
+```{r}
+fit = lm(expression ~ 0 + group)
+tidy(fit)
+```
+
+```{r}
+model.name = paste0("E(y)=", round(fit$coef[1],2), "*WT", "+", round(fit$coef[2],2), "*KO")
+
+ggplot(data, aes(y = expression, x = group)) +
+  geom_point() +
+  geom_hline(yintercept = fit$coef[1],
+             color = "red") +
+  geom_hline(yintercept = fit$coef[2],
+             color = "blue") +
+  labs(title = model.name,
+       y = "expression (y)",
+       x = "group (x)")
+```
+
+```{r}
+makeContrasts(groupKO - groupWT, levels=colnames(mm))
+```
+
+```{r}
+treatment = as_factor(rep(c("CTRL", "A", "B", "C"), each=3))
+n = length(treatment)
+expression = rep(c(0,1,2,4), each=3) + 1
+expression = expression + rnorm(n, sd=0.1)
+mouse = paste0("MOUSE", 1:n)
+data = tibble(expression, mouse, treatment)
+data
+```
+
+```{r}
+(mm = model.matrix(expression ~ 1 + treatment))
+```
+
+```{r}
+fit = lm(expression ~ 1 + treatment)
+tidy(fit)
+```
+
+```{r}
+(mm = model.matrix(expression ~ 0 + treatment))
+```
+
+```{r}
+fit = lm(expression ~ 0 + treatment)
+tidy(fit)
+```
+
+```{r}
+sessionInfo()
+```
