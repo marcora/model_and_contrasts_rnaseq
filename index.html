@@ -283,7 +283,7 @@ e_i = y_i - \hat{y}_i
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> a, <span class="at">slope =</span> b) <span class="sc">+</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_abline(intercept = fit$coefficients[1], slope = fit$coefficients[2], color = "red") +</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"orange"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -676,8 +676,8 @@ Levels          (treatmentCTRL + treatmentC)/2 - (treatmentA + treatmentB)/2
 </div>
 </section>
 </section>
-<section id="study-of-interactions-and-additivity-of-treatments" class="level2">
-<h2 class="anchored" data-anchor-id="study-of-interactions-and-additivity-of-treatments">Study of interactions and additivity of treatments</h2>
+<section id="studies-of-interactions-and-additivity-of-treatments" class="level2">
+<h2 class="anchored" data-anchor-id="studies-of-interactions-and-additivity-of-treatments">Studies of interactions and additivity of treatments</h2>
 <section id="interactions-using-a-single-factor-model" class="level3">
 <h3 class="anchored" data-anchor-id="interactions-using-a-single-factor-model">Interactions using a single factor model</h3>
 </section>
@@ -755,13 +755,76 @@ attr(,"contrasts")$treat2
 </section>
 <section id="studies-with-multiple-factors" class="level2">
 <h2 class="anchored" data-anchor-id="studies-with-multiple-factors">Studies with multiple factors</h2>
-<p>XXX</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>tissue <span class="ot">=</span> treat1</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(tissue) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"LUNG"</span>, <span class="st">"BRAIN"</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>cells <span class="ot">=</span> treat2</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(cells) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"B"</span>, <span class="st">"T"</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>grp <span class="ot">=</span> <span class="fu">paste</span>(tissue, cells, <span class="at">sep=</span><span class="st">":"</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>grp <span class="ot">=</span> <span class="fu">as_factor</span>(grp)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, tissue, cells, grp)</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["tissue"],"name":[3],"type":["fct"],"align":["left"]},{"label":["cells"],"name":[4],"type":["fct"],"align":["left"]},{"label":["grp"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"0.9425","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE2","2":"0.9224","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE3","2":"1.0675","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE4","2":"1.9700","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE5","2":"2.0204","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE6","2":"2.0303","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE7","2":"3.0623","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE8","2":"2.9547","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE9","2":"2.9967","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE10","2":"4.8688","3":"BRAIN","4":"T","5":"BRAIN:T"},{"1":"MOUSE11","2":"5.2282","3":"BRAIN","4":"T","5":"BRAIN:T"},{"1":"MOUSE12","2":"4.8479","3":"BRAIN","4":"T","5":"BRAIN:T"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> grp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   grpLUNG:B grpBRAIN:B grpLUNG:T grpBRAIN:T
+1          1          0         0          0
+2          1          0         0          0
+3          1          0         0          0
+4          0          1         0          0
+5          0          1         0          0
+6          0          1         0          0
+7          0          0         1          0
+8          0          0         1          0
+9          0          0         1          0
+10         0          0         0          1
+11         0          0         0          1
+12         0          0         0          1
+attr(,"assign")
+[1] 1 1 1 1
+attr(,"contrasts")
+attr(,"contrasts")$grp
+[1] "contr.treatment"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> grp)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"grpLUNG:B","2":"0.9775","3":"0.06823","4":"14.33","5":"0.00000055025771"},{"1":"grpBRAIN:B","2":"2.0069","3":"0.06823","4":"29.41","5":"0.00000000193467"},{"1":"grpLUNG:T","2":"3.0045","3":"0.06823","4":"44.03","5":"0.00000000007808"},{"1":"grpBRAIN:T","2":"4.9816","3":"0.06823","4":"73.01","5":"0.00000000000138"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"grp","2":"BRAIN:B - LUNG:B","3":"1.029","4":"0.0965","5":"10.67","6":"0.0000052273417","7":"0.8069","8":"1.252","9":"8"},{"1":"grp","2":"BRAIN:T - LUNG:B","3":"4.004","4":"0.0965","5":"41.49","6":"0.0000000001253","7":"3.7816","8":"4.227","9":"8"},{"1":"grp","2":"LUNG:T - LUNG:B","3":"2.027","4":"0.0965","5":"21.01","6":"0.0000000276871","7":"1.8046","8":"2.250","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
 </section>
 <section id="studies-with-multiple-covariates-and-factors" class="level2">
 <h2 class="anchored" data-anchor-id="studies-with-multiple-covariates-and-factors">Studies with multiple covariates (and factors)</h2>
 <p>XXX</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.2.2 (2022-10-31)
 Platform: x86_64-apple-darwin17.0 (64-bit)

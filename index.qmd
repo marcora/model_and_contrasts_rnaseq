@@ -147,7 +147,7 @@ ggplot(data, aes(x = x, y = y)) +
   geom_point() +
   geom_abline(intercept = a, slope = b) +
   # geom_abline(intercept = fit$coefficients[1], slope = fit$coefficients[2], color = "red") +
-  geom_smooth(method = "lm", color = "red")
+  geom_smooth(method = "lm", color = "orange")
 ```
 
 ### Regression model for covariates
@@ -351,7 +351,7 @@ makeContrasts((treatmentCTRL + treatmentC)/2 - (treatmentA + treatmentB)/2, leve
 
 ```
 
-## Study of interactions and additivity of treatments
+## Studies of interactions and additivity of treatments
 
 ### Interactions using a single factor model
 
@@ -384,7 +384,29 @@ XXX
 
 ## Studies with multiple factors
 
-XXX
+```{r}
+tissue = treat1
+levels(tissue) = c("LUNG", "BRAIN")
+cells = treat2
+levels(cells) = c("B", "T")
+grp = paste(tissue, cells, sep=":")
+grp = as_factor(grp)
+data = tibble(mouse, expression, tissue, cells, grp)
+data
+```
+
+```{r}
+(design = model.matrix(expression ~ 0 + grp))
+```
+
+```{r}
+fit = lm(expression ~ 0 + grp)
+tidy(fit)
+```
+
+```{r}
+avg_comparisons(fit, df = insight::get_df(fit))
+```
 
 ## Studies with multiple covariates (and factors)
 
