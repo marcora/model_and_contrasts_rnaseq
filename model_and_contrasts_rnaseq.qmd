@@ -7,9 +7,9 @@ format:
 
 ## **References**
 
-[A guide to creating design matrices for gene expression experiments](https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/designmatrices.html) (<https://f1000research.com/articles/9-1444/v1>)
+[A guide to creating design matrices for gene expression experiments](https://f1000research.com/articles/9-1444/v1)
 
-[RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR](https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/limmaWorkflow.html) (<https://f1000research.com/articles/5-1408/v3>)
+[RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR](https://f1000research.com/articles/5-1408/v3)
 
 ## XXX
 
@@ -34,7 +34,7 @@ data
 ```
 
 ```{r}
-(mm = model.matrix(expression ~ 1 + age))
+(design = model.matrix(expression ~ 1 + age))
 ```
 
 ```{r}
@@ -62,7 +62,7 @@ data
 ```
 
 ```{r}
-(mm = model.matrix(expression ~ 1 + group))
+(design = model.matrix(expression ~ 1 + group))
 ```
 
 ```{r}
@@ -85,7 +85,7 @@ ggplot(data, aes(y = expression, x = group)) +
 ```
 
 ```{r}
-(mm = model.matrix(expression ~ 0 + group))
+(design = model.matrix(expression ~ 0 + group))
 ```
 
 ```{r}
@@ -108,7 +108,7 @@ ggplot(data, aes(y = expression, x = group)) +
 ```
 
 ```{r}
-makeContrasts(groupKO - groupWT, levels=colnames(mm))
+makeContrasts(groupKO - groupWT, levels=colnames(design))
 ```
 
 ```{r}
@@ -122,7 +122,7 @@ data
 ```
 
 ```{r}
-(mm = model.matrix(expression ~ 1 + treatment))
+(design = model.matrix(expression ~ 1 + treatment))
 ```
 
 ```{r}
@@ -131,11 +131,93 @@ tidy(fit)
 ```
 
 ```{r}
-(mm = model.matrix(expression ~ 0 + treatment))
+avg_comparisons(fit, df = insight::get_df(fit))
+```
+
+```{r}
+model.name = paste0("E(y)=", round(fit$coef[1],2), "+", round(fit$coef[2],2), "*A", "+", round(fit$coef[3],2), "*B", "+", round(fit$coef[4],2), "*C")
+
+ggplot(data, aes(y = expression, x = treatment)) +
+  geom_point() +
+  geom_hline(yintercept = fit$coef[1],
+             color = "red") +
+  geom_hline(yintercept = fit$coef[1] + fit$coef[2],
+             color = "blue") +
+  geom_hline(yintercept = fit$coef[1] + fit$coef[3],
+             color = "green") +
+  geom_hline(yintercept = fit$coef[1] + fit$coef[4],
+             color = "orange") +
+  labs(title = model.name,
+       y = "expression (y)",
+       x = "treatment (x)")
+```
+
+```{r}
+(design = model.matrix(expression ~ 0 + treatment))
 ```
 
 ```{r}
 fit = lm(expression ~ 0 + treatment)
+tidy(fit)
+```
+
+```{r}
+avg_comparisons(fit, df = insight::get_df(fit))
+```
+
+```{r}
+model.name = paste0("E(y)=", round(fit$coef[1],2), "*CTRL", "+", round(fit$coef[2],2), "*A", "+", round(fit$coef[3],2), "*B", "+", round(fit$coef[4],2), "*C")
+
+ggplot(data, aes(y = expression, x = treatment)) +
+  geom_point() +
+  geom_hline(yintercept = fit$coef[1],
+             color = "red") +
+  geom_hline(yintercept = fit$coef[2],
+             color = "blue") +
+  geom_hline(yintercept = fit$coef[3],
+             color = "green") +
+  geom_hline(yintercept = fit$coef[4],
+             color = "orange") +
+  labs(title = model.name,
+       y = "expression (y)",
+       x = "treatment (x)")
+```
+
+```{r}
+contrasts = makeContrasts(
+  treatmentA-treatmentCTRL,
+  treatmentB-treatmentCTRL, 
+  treatmentC-treatmentCTRL,
+  levels=colnames(design))
+
+colnames(contrasts) <- abbreviate(colnames(contrasts))
+
+contrasts
+```
+
+```{r}
+makeContrasts((treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL, levels=colnames(design))
+```
+
+```{r}
+makeContrasts((treatmentCTRL + treatmentC)/2 - (treatmentA + treatmentB)/2, levels=colnames(design))
+
+```
+
+```{r}
+treat1 <- as_factor(c(0,0,0,1,1,1,0,0,0,1,1,1))
+treat2 <- as_factor(c(0,0,0,0,0,0,1,1,1,1,1,1))
+levels(treat1) = levels(treat2) = c("NO", "YES")
+data = tibble(mouse, expression, treat1, treat2)
+data
+```
+
+```{r}
+(design = model.matrix(expression ~ treat1 * treat2))
+```
+
+```{r}
+fit = lm(expression ~ treat1 * treat2)
 tidy(fit)
 ```
 

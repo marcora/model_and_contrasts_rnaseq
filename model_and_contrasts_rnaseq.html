@@ -128,8 +128,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references"><strong>References</strong></h2>
-<p><a href="https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/designmatrices.html">A guide to creating design matrices for gene expression experiments</a> (<a href="https://f1000research.com/articles/9-1444/v1" class="uri">https://f1000research.com/articles/9-1444/v1</a>)</p>
-<p><a href="https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/limmaWorkflow.html">RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR</a> (<a href="https://f1000research.com/articles/5-1408/v3" class="uri">https://f1000research.com/articles/5-1408/v3</a>)</p>
+<p><a href="https://f1000research.com/articles/9-1444/v1">A guide to creating design matrices for gene expression experiments</a></p>
+<p><a href="https://f1000research.com/articles/5-1408/v3">RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR</a></p>
 </section>
 <section id="xxx" class="level2">
 <h2 class="anchored" data-anchor-id="xxx">XXX</h2>
@@ -159,7 +159,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">mm =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept) age
 1           1   1
@@ -213,7 +213,7 @@ attr(,"assign")
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">mm =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept) groupKO
 1           1       0
@@ -258,7 +258,7 @@ attr(,"contrasts")$group
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">mm =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> group))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> group))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  groupWT groupKO
 1       1       0
@@ -303,7 +303,7 @@ attr(,"contrasts")$group
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>(groupKO <span class="sc">-</span> groupWT, <span class="at">levels=</span><span class="fu">colnames</span>(mm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>(groupKO <span class="sc">-</span> groupWT, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Contrasts
 Levels    groupKO - groupWT
@@ -329,7 +329,7 @@ Levels    groupKO - groupWT
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">mm =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   (Intercept) treatmentA treatmentB treatmentC
 1            1          0          0          0
@@ -364,7 +364,38 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">mm =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"A - CTRL","3":"1.046","4":"0.06305","5":"16.59","6":"0.000000175770125","7":"0.9008","8":"1.192","9":"8"},{"1":"treatment","2":"B - CTRL","3":"2.027","4":"0.06305","5":"32.16","6":"0.000000000953090","7":"1.8819","8":"2.173","9":"8"},{"1":"treatment","2":"C - CTRL","3":"3.982","4":"0.06305","5":"63.16","6":"0.000000000004389","7":"3.8369","8":"4.128","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*A"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="dv">2</span>), <span class="st">"*B"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">4</span>],<span class="dv">2</span>), <span class="st">"*C"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">3</span>],</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">4</span>],</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"treatment (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="model_and_contrasts_rnaseq_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   treatmentCTRL treatmentA treatmentB treatmentC
 1              1          0          0          0
@@ -387,8 +418,8 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -399,7 +430,132 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"A - CTRL","3":"1.046","4":"0.06305","5":"16.59","6":"0.000000175770125","7":"0.9008","8":"1.192","9":"8"},{"1":"treatment","2":"B - CTRL","3":"2.027","4":"0.06305","5":"32.16","6":"0.000000000953090","7":"1.8819","8":"2.173","9":"8"},{"1":"treatment","2":"C - CTRL","3":"3.982","4":"0.06305","5":"63.16","6":"0.000000000004389","7":"3.8369","8":"4.128","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"*CTRL"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*A"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="dv">2</span>), <span class="st">"*B"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">4</span>],<span class="dv">2</span>), <span class="st">"*C"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">3</span>],</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">4</span>],</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"treatment (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="model_and_contrasts_rnaseq_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">=</span> <span class="fu">makeContrasts</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  treatmentA<span class="sc">-</span>treatmentCTRL,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  treatmentB<span class="sc">-</span>treatmentCTRL, </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  treatmentC<span class="sc">-</span>treatmentCTRL,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels=</span><span class="fu">colnames</span>(design))</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(contrasts) <span class="ot">&lt;-</span> <span class="fu">abbreviate</span>(<span class="fu">colnames</span>(contrasts))</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>contrasts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Contrasts
+Levels          tA-t tB-t tC-t
+  treatmentCTRL   -1   -1   -1
+  treatmentA       1    0    0
+  treatmentB       0    1    0
+  treatmentC       0    0    1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>((treatmentA <span class="sc">+</span> treatmentB <span class="sc">+</span> treatmentC)<span class="sc">/</span><span class="dv">3</span> <span class="sc">-</span> treatmentCTRL, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Contrasts
+Levels          (treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL
+  treatmentCTRL                                                  -1.0000
+  treatmentA                                                      0.3333
+  treatmentB                                                      0.3333
+  treatmentC                                                      0.3333</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>((treatmentCTRL <span class="sc">+</span> treatmentC)<span class="sc">/</span><span class="dv">2</span> <span class="sc">-</span> (treatmentA <span class="sc">+</span> treatmentB)<span class="sc">/</span><span class="dv">2</span>, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Contrasts
+Levels          (treatmentCTRL + treatmentC)/2 - (treatmentA + treatmentB)/2
+  treatmentCTRL                                                          0.5
+  treatmentA                                                            -0.5
+  treatmentB                                                            -0.5
+  treatmentC                                                             0.5</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>treat1 <span class="ot">&lt;-</span> <span class="fu">as_factor</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>treat2 <span class="ot">&lt;-</span> <span class="fu">as_factor</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(treat1) <span class="ot">=</span> <span class="fu">levels</span>(treat2) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"NO"</span>, <span class="st">"YES"</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, treat1, treat2)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["treat1"],"name":[3],"type":["fct"],"align":["left"]},{"label":["treat2"],"name":[4],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"1.0763","3":"NO","4":"NO"},{"1":"MOUSE2","2":"0.9044","3":"NO","4":"NO"},{"1":"MOUSE3","2":"0.8639","3":"NO","4":"NO"},{"1":"MOUSE4","2":"2.0672","3":"YES","4":"NO"},{"1":"MOUSE5","2":"1.9089","3":"YES","4":"NO"},{"1":"MOUSE6","2":"2.0071","3":"YES","4":"NO"},{"1":"MOUSE7","2":"3.0237","3":"NO","4":"YES"},{"1":"MOUSE8","2":"2.9465","3":"NO","4":"YES"},{"1":"MOUSE9","2":"2.9564","3":"NO","4":"YES"},{"1":"MOUSE10","2":"4.9153","3":"YES","4":"YES"},{"1":"MOUSE11","2":"4.9910","3":"YES","4":"YES"},{"1":"MOUSE12","2":"4.8853","3":"YES","4":"YES"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   (Intercept) treat1YES treat2YES treat1YES:treat2YES
+1            1         0         0                   0
+2            1         0         0                   0
+3            1         0         0                   0
+4            1         1         0                   0
+5            1         1         0                   0
+6            1         1         0                   0
+7            1         0         1                   0
+8            1         0         1                   0
+9            1         0         1                   0
+10           1         1         1                   1
+11           1         1         1                   1
+12           1         1         1                   1
+attr(,"assign")
+[1] 0 1 2 3
+attr(,"contrasts")
+attr(,"contrasts")$treat1
+[1] "contr.treatment"
+
+attr(,"contrasts")$treat2
+[1] "contr.treatment"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.9482","3":"0.04458","4":"21.27","5":"0.0000000251055"},{"1":"treat1YES","2":"1.0462","3":"0.06305","4":"16.59","5":"0.0000001757701"},{"1":"treat2YES","2":"2.0273","3":"0.06305","4":"32.16","5":"0.0000000009531"},{"1":"treat1YES:treat2YES","2":"0.9088","3":"0.08916","4":"10.19","5":"0.0000073584842"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.2.2 (2022-10-31)
 Platform: x86_64-apple-darwin17.0 (64-bit)
@@ -424,16 +580,16 @@ other attached packages:
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.10       compiler_4.2.2    pillar_1.8.1      tools_4.2.2      
- [5] digest_0.6.31     timechange_0.2.0  jsonlite_1.8.4    evaluate_0.20    
- [9] lifecycle_1.0.3   gtable_0.3.1      pkgconfig_2.0.3   rlang_1.1.0      
-[13] cli_3.6.0         rstudioapi_0.14   yaml_2.3.7        xfun_0.37        
-[17] fastmap_1.1.1     withr_2.5.0       knitr_1.42        generics_0.1.3   
-[21] vctrs_0.5.2       htmlwidgets_1.6.1 hms_1.1.2         grid_4.2.2       
-[25] tidyselect_1.2.0  data.table_1.14.8 glue_1.6.2        R6_2.5.1         
-[29] fansi_1.0.4       rmarkdown_2.20    farver_2.1.1      tzdb_0.3.0       
-[33] backports_1.4.1   ellipsis_0.3.2    scales_1.2.1      htmltools_0.5.4  
-[37] colorspace_2.1-0  labeling_0.4.2    utf8_1.2.3        stringi_1.7.12   
-[41] munsell_0.5.0    </code></pre>
+ [5] digest_0.6.31     checkmate_2.1.0   timechange_0.2.0  jsonlite_1.8.4   
+ [9] evaluate_0.20     lifecycle_1.0.3   gtable_0.3.1      pkgconfig_2.0.3  
+[13] rlang_1.1.0       cli_3.6.0         rstudioapi_0.14   yaml_2.3.7       
+[17] xfun_0.37         fastmap_1.1.1     withr_2.5.0       knitr_1.42       
+[21] generics_0.1.3    vctrs_0.5.2       htmlwidgets_1.6.1 hms_1.1.2        
+[25] grid_4.2.2        tidyselect_1.2.0  data.table_1.14.8 glue_1.6.2       
+[29] R6_2.5.1          fansi_1.0.4       rmarkdown_2.20    farver_2.1.1     
+[33] tzdb_0.3.0        backports_1.4.1   ellipsis_0.3.2    scales_1.2.1     
+[37] htmltools_0.5.4   insight_0.19.0    colorspace_2.1-0  labeling_0.4.2   
+[41] utf8_1.2.3        stringi_1.7.12    munsell_0.5.0    </code></pre>
 </div>
 </div>
 </section>
