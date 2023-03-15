@@ -1,17 +1,17 @@
 ---
-title: "A guide to creating design matrices for gene expression experiments"
+title: "Regression models for statistical analysis of gene expression data"
 format:
   html:
     df-print: paged
 ---
 
-## **References**
+## References
 
 [A guide to creating design matrices for gene expression experiments](https://f1000research.com/articles/9-1444/v1)
 
 [RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR](https://f1000research.com/articles/5-1408/v3)
 
-## XXX
+## Setup
 
 ```{r}
 #| output: false
@@ -22,13 +22,144 @@ library(marginaleffects)
 library(limma)
 
 theme_set(theme_bw())
-set.seed(1969)
+set.seed(1981)
 ```
+
+## Common statistical tests are regression models
+
+<https://lindeloev.github.io/tests-as-linear/>
+
+![](images/image-196232366.png)
+
+## Regression models
+
+Regression models propose that $y_i$ is a function of $x_i$ and $\beta$ with $e_i$ representing an additive error term that may stand in for un-modeled determinants of $y_i$ or random noise. The researcher's goal is to estimate the function $f(x_i, \beta)$ that most closely fits the data generation process based on the data/observations:
+
+$$
+\begin{gather}
+(y_i,x_i) \\
+i = 1, \ldots, n
+\end{gather}
+$$ Model:
+
+$$
+y_i = f(x_i, \beta) + e_i
+$$
+
+For example (univariate linear regression):
+
+$$
+f(x_i, \beta) = \beta_0 + \beta_1 x_i
+$$
+
+$$
+y_i = \beta_0 + \beta_1 x_i + e_i
+$$ $$
+e_i \sim \mathcal{N}(\mu = 0, \sigma^2)
+$$
+
+$$
+y_i \sim \beta_0 + \beta_1 x_i + \mathcal{N}(\mu = 0, \sigma^2)
+$$
+
+$$
+y_i \sim \mathcal{N}(\mu_i, \sigma^2)
+$$
+
+$$
+\mu_i = \beta_0 + \beta_1 x_i = E(Y)
+$$
+
+![](images/image-158884090.png)
+
+### Deterministic vs stochastic/statistical linear regression model
+
+$$
+y = a + b x
+$$
+
+```{r}
+a = 2
+b = 2
+x = seq(2, 12, by = 2)
+y = a + b * x
+data = tibble(x, y)
+data
+```
+
+```{r}
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_abline(intercept = a, slope = b)
+```
+
+```{r}
+y = a + b * x + rnorm(n = length(x), sd = 1)
+data = tibble(x, y)
+data
+```
+
+```{r}
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_abline(intercept = a, slope = b)
+```
+
+$$
+y_i \sim \mathcal{N}(\mu_i, \sigma^2)
+$$
+
+$$
+\begin{align}
+\mu_i & = \beta_0 + \beta_1 x_i \\
+& = \beta_0 \cdot 1 + \beta_1 \cdot x_i \\
+\end{align}
+$$
+
+R formula syntax:
+
+$$
+y \sim 1 + x
+$$
+
+```{r}
+(design = model.matrix(y ~ 1 + x))
+```
+
+```{r}
+fit = lm(y ~ 1 + x)
+tidy(fit)
+```
+
+$$
+\hat{y}_i = \hat{\beta_0} + \hat{\beta_1} x_i
+$$
+
+$$
+e_i = y_i - \hat{y}_i
+$$
+
+```{r}
+#| message: false
+y = a + b * x + rnorm(n = length(x), sd = 1)
+data = tibble(x, y)
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_abline(intercept = a, slope = b) +
+  # geom_abline(intercept = fit$coefficients[1], slope = fit$coefficients[2], color = "red") +
+  geom_smooth(method = "lm", color = "red")
+```
+
+### Regression model for covariates
+
+$$
+\text{expression} = \beta_0 + \beta_1 \text{age}
+$$
 
 ```{r}
 mouse = paste0("MOUSE", 1:6)
 age = c(1,2,3,4,5,6)
-expression = 2 + 0.5 * age + rnorm(n=6, sd=0.1)
+expression = 2 + 0.5 * age + rnorm(n = 6, sd = 0.1)
 data = tibble(mouse, expression, age)
 data
 ```
@@ -54,6 +185,8 @@ ggplot(data, aes(y = expression, x = age)) +
        y = "expression (y)",
        x = "age (x)")
 ```
+
+### Means model for factors
 
 ```{r}
 group = fct_relevel(rep(c("WT", "KO"), each = 3), "WT")
@@ -84,6 +217,8 @@ ggplot(data, aes(y = expression, x = group)) +
        x = "group (x)")
 ```
 
+### Mean-reference model for factors
+
 ```{r}
 (design = model.matrix(expression ~ 0 + group))
 ```
@@ -110,6 +245,14 @@ ggplot(data, aes(y = expression, x = group)) +
 ```{r}
 makeContrasts(groupKO - groupWT, levels=colnames(design))
 ```
+
+## Design and contrast matrices
+
+XXX
+
+## Studies of treatments and control
+
+### All pairwise comparisons
 
 ```{r}
 treatment = as_factor(rep(c("CTRL", "A", "B", "C"), each=3))
@@ -195,14 +338,24 @@ colnames(contrasts) <- abbreviate(colnames(contrasts))
 contrasts
 ```
 
+### Control vs the rest
+
 ```{r}
 makeContrasts((treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL, levels=colnames(design))
 ```
+
+### 2 vs 2 group comparisons
 
 ```{r}
 makeContrasts((treatmentCTRL + treatmentC)/2 - (treatmentA + treatmentB)/2, levels=colnames(design))
 
 ```
+
+## Study of interactions and additivity of treatments
+
+### Interactions using a single factor model
+
+### Interactions using a two-factor model
 
 ```{r}
 treat1 <- as_factor(c(0,0,0,1,1,1,0,0,0,1,1,1))
@@ -220,6 +373,22 @@ data
 fit = lm(expression ~ treat1 * treat2)
 tidy(fit)
 ```
+
+```{r}
+avg_comparisons(fit, df = insight::get_df(fit))
+```
+
+### Additivity using a two-factor model
+
+XXX
+
+## Studies with multiple factors
+
+XXX
+
+## Studies with multiple covariates (and factors)
+
+XXX
 
 ```{r}
 sessionInfo()

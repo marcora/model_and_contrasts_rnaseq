@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>A guide to creating design matrices for gene expression experiments</title>
+<title>Regression models for statistical analysis of gene expression data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -100,6 +100,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link href="index_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="index_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -111,7 +112,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">A guide to creating design matrices for gene expression experiments</h1>
+<h1 class="title">Regression models for statistical analysis of gene expression data</h1>
 </div>
 
 
@@ -127,12 +128,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 
 <section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references"><strong>References</strong></h2>
+<h2 class="anchored" data-anchor-id="references">References</h2>
 <p><a href="https://f1000research.com/articles/9-1444/v1">A guide to creating design matrices for gene expression experiments</a></p>
 <p><a href="https://f1000research.com/articles/5-1408/v3">RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR</a></p>
 </section>
-<section id="xxx" class="level2">
-<h2 class="anchored" data-anchor-id="xxx">XXX</h2>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
@@ -141,25 +142,175 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(limma)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1969</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1981</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="common-statistical-tests-are-regression-models" class="level2">
+<h2 class="anchored" data-anchor-id="common-statistical-tests-are-regression-models">Common statistical tests are regression models</h2>
+<p><a href="https://lindeloev.github.io/tests-as-linear/" class="uri">https://lindeloev.github.io/tests-as-linear/</a></p>
+<p><img src="images/image-196232366.png" class="img-fluid"></p>
+</section>
+<section id="regression-models" class="level2">
+<h2 class="anchored" data-anchor-id="regression-models">Regression models</h2>
+<p>Regression models propose that <span class="math inline">\(y_i\)</span> is a function of <span class="math inline">\(x_i\)</span> and <span class="math inline">\(\beta\)</span> with <span class="math inline">\(e_i\)</span> representing an additive error term that may stand in for un-modeled determinants of <span class="math inline">\(y_i\)</span> or random noise. The researcher’s goal is to estimate the function <span class="math inline">\(f(x_i, \beta)\)</span> that most closely fits the data generation process based on the data/observations:</p>
+<p><span class="math display">\[
+\begin{gather}
+(y_i,x_i) \\
+i = 1, \ldots, n
+\end{gather}
+\]</span> Model:</p>
+<p><span class="math display">\[
+y_i = f(x_i, \beta) + e_i
+\]</span></p>
+<p>For example (univariate linear regression):</p>
+<p><span class="math display">\[
+f(x_i, \beta) = \beta_0 + \beta_1 x_i
+\]</span></p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 x_i + e_i
+\]</span> <span class="math display">\[
+e_i \sim \mathcal{N}(\mu = 0, \sigma^2)
+\]</span></p>
+<p><span class="math display">\[
+y_i \sim \beta_0 + \beta_1 x_i + \mathcal{N}(\mu = 0, \sigma^2)
+\]</span></p>
+<p><span class="math display">\[
+y_i \sim \mathcal{N}(\mu_i, \sigma^2)
+\]</span></p>
+<p><span class="math display">\[
+\mu_i = \beta_0 + \beta_1 x_i = E(Y)
+\]</span></p>
+<p><img src="images/image-158884090.png" class="img-fluid"></p>
+<section id="deterministic-vs-stochasticstatistical-linear-regression-model" class="level3">
+<h3 class="anchored" data-anchor-id="deterministic-vs-stochasticstatistical-linear-regression-model">Deterministic vs stochastic/statistical linear regression model</h3>
+<p><span class="math display">\[
+y = a + b x
+\]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mouse <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"MOUSE"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>age <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>expression <span class="ot">=</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> age <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="dv">6</span>, <span class="at">sd=</span><span class="fl">0.1</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, age)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">seq</span>(<span class="dv">2</span>, <span class="dv">12</span>, <span class="at">by =</span> <span class="dv">2</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> a <span class="sc">+</span> b <span class="sc">*</span> x</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(x, y)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["age"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"MOUSE1","2":"2.422","3":"1"},{"1":"MOUSE2","2":"2.907","3":"2"},{"1":"MOUSE3","2":"3.413","3":"3"},{"1":"MOUSE4","2":"3.930","3":"4"},{"1":"MOUSE5","2":"4.553","3":"5"},{"1":"MOUSE6","2":"4.910","3":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["x"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["y"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"6"},{"1":"4","2":"10"},{"1":"6","2":"14"},{"1":"8","2":"18"},{"1":"10","2":"22"},{"1":"12","2":"26"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> a, <span class="at">slope =</span> b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> a <span class="sc">+</span> b <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="fu">length</span>(x), <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(x, y)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["x"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["y"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"5.654"},{"1":"4","2":"8.868"},{"1":"6","2":"14.923"},{"1":"8","2":"18.670"},{"1":"10","2":"21.530"},{"1":"12","2":"25.243"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> a, <span class="at">slope =</span> b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><span class="math display">\[
+y_i \sim \mathcal{N}(\mu_i, \sigma^2)
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}
+\mu_i &amp; = \beta_0 + \beta_1 x_i \\
+&amp; = \beta_0 \cdot 1 + \beta_1 \cdot x_i \\
+\end{align}
+\]</span></p>
+<p>R formula syntax:</p>
+<p><span class="math display">\[
+y \sim 1 + x
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  (Intercept)  x
+1           1  2
+2           1  4
+3           1  6
+4           1  8
+5           1 10
+6           1 12
+attr(,"assign")
+[1] 0 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> x)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.847","3":"0.8441","4":"2.188","5":"0.09386781"},{"1":"x","2":"1.995","3":"0.1084","4":"18.413","5":"0.00005119"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><span class="math display">\[
+\hat{y}_i = \hat{\beta_0} + \hat{\beta_1} x_i
+\]</span></p>
+<p><span class="math display">\[
+e_i = y_i - \hat{y}_i
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> a <span class="sc">+</span> b <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="fu">length</span>(x), <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(x, y)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> a, <span class="at">slope =</span> b) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_abline(intercept = fit$coefficients[1], slope = fit$coefficients[2], color = "red") +</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="regression-model-for-covariates" class="level3">
+<h3 class="anchored" data-anchor-id="regression-model-for-covariates">Regression model for covariates</h3>
+<p><span class="math display">\[
+\text{expression} = \beta_0 + \beta_1 \text{age}
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mouse <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"MOUSE"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>age <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>expression <span class="ot">=</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> age <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">6</span>, <span class="at">sd =</span> <span class="fl">0.1</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, age)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["age"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"MOUSE1","2":"2.394","3":"1"},{"1":"MOUSE2","2":"2.868","3":"2"},{"1":"MOUSE3","2":"3.420","3":"3"},{"1":"MOUSE4","2":"3.993","3":"4"},{"1":"MOUSE5","2":"4.519","3":"5"},{"1":"MOUSE6","2":"5.198","3":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept) age
 1           1   1
@@ -173,47 +324,50 @@ attr(,"assign")
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> age)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> age)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.8997","3":"0.05429","4":"34.99","5":"0.00000398"},{"1":"age","2":"0.5113","3":"0.01394","4":"36.68","5":"0.00000330"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.7771","3":"0.05294","4":"33.57","5":"0.000004697"},{"1":"age","2":"0.5585","3":"0.01359","4":"41.09","5":"0.000002097"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*x"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> age)) <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">slope =</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"age (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*x"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">slope =</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"age (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+</section>
+<section id="means-model-for-factors" class="level3">
+<h3 class="anchored" data-anchor-id="means-model-for-factors">Means model for factors</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>group <span class="ot">=</span> <span class="fu">fct_relevel</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>), <span class="at">each =</span> <span class="dv">3</span>), <span class="st">"WT"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, group)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>group <span class="ot">=</span> <span class="fu">fct_relevel</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"KO"</span>), <span class="at">each =</span> <span class="dv">3</span>), <span class="st">"WT"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, group)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"2.422","3":"WT"},{"1":"MOUSE2","2":"2.907","3":"WT"},{"1":"MOUSE3","2":"3.413","3":"WT"},{"1":"MOUSE4","2":"3.930","3":"KO"},{"1":"MOUSE5","2":"4.553","3":"KO"},{"1":"MOUSE6","2":"4.910","3":"KO"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"2.394","3":"WT"},{"1":"MOUSE2","2":"2.868","3":"WT"},{"1":"MOUSE3","2":"3.420","3":"WT"},{"1":"MOUSE4","2":"3.993","3":"KO"},{"1":"MOUSE5","2":"4.519","3":"KO"},{"1":"MOUSE6","2":"5.198","3":"KO"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept) groupKO
 1           1       0
@@ -230,35 +384,38 @@ attr(,"contrasts")$group
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"2.914","3":"0.2863","4":"10.178","5":"0.0005249"},{"1":"groupKO","2":"1.550","3":"0.4049","4":"3.828","5":"0.0186463"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"2.894","3":"0.3237","4":"8.940","5":"0.0008657"},{"1":"groupKO","2":"1.676","3":"0.4577","4":"3.662","5":"0.0215457"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*KO"</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> group)) <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"group (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*KO"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> group)) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"group (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+</section>
+<section id="mean-reference-model-for-factors" class="level3">
+<h3 class="anchored" data-anchor-id="mean-reference-model-for-factors">Mean-reference model for factors</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> group))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> group))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  groupWT groupKO
 1       1       0
@@ -275,35 +432,35 @@ attr(,"contrasts")$group
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> group)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> group)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"groupWT","2":"2.914","3":"0.2863","4":"10.18","5":"0.0005249"},{"1":"groupKO","2":"4.464","3":"0.2863","4":"15.59","5":"0.0000988"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"groupWT","2":"2.894","3":"0.3237","4":"8.94","5":"0.0008657"},{"1":"groupKO","2":"4.570","3":"0.3237","4":"14.12","5":"0.0001461"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"*WT"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*KO"</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> group)) <span class="sc">+</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"group (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"*WT"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*KO"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> group)) <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"group (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>(groupKO <span class="sc">-</span> groupWT, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>(groupKO <span class="sc">-</span> groupWT, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Contrasts
 Levels    groupKO - groupWT
@@ -311,25 +468,35 @@ Levels    groupKO - groupWT
   groupKO                 1</code></pre>
 </div>
 </div>
+</section>
+</section>
+<section id="design-and-contrast-matrices" class="level2">
+<h2 class="anchored" data-anchor-id="design-and-contrast-matrices">Design and contrast matrices</h2>
+<p>XXX</p>
+</section>
+<section id="studies-of-treatments-and-control" class="level2">
+<h2 class="anchored" data-anchor-id="studies-of-treatments-and-control">Studies of treatments and control</h2>
+<section id="all-pairwise-comparisons" class="level3">
+<h3 class="anchored" data-anchor-id="all-pairwise-comparisons">All pairwise comparisons</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"CTRL"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>), <span class="at">each=</span><span class="dv">3</span>))</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">length</span>(treatment)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>expression <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="at">each=</span><span class="dv">3</span>) <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>expression <span class="ot">=</span> expression <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="fl">0.1</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>mouse <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"MOUSE"</span>, <span class="dv">1</span><span class="sc">:</span>n)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(expression, mouse, treatment)</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"CTRL"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>), <span class="at">each=</span><span class="dv">3</span>))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">length</span>(treatment)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>expression <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="at">each=</span><span class="dv">3</span>) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>expression <span class="ot">=</span> expression <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="fl">0.1</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>mouse <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"MOUSE"</span>, <span class="dv">1</span><span class="sc">:</span>n)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(expression, mouse, treatment)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["expression"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["mouse"],"name":[2],"type":["chr"],"align":["left"]},{"label":["treatment"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"1.0763","2":"MOUSE1","3":"CTRL"},{"1":"0.9044","2":"MOUSE2","3":"CTRL"},{"1":"0.8639","2":"MOUSE3","3":"CTRL"},{"1":"2.0672","2":"MOUSE4","3":"A"},{"1":"1.9089","2":"MOUSE5","3":"A"},{"1":"2.0071","2":"MOUSE6","3":"A"},{"1":"3.0237","2":"MOUSE7","3":"B"},{"1":"2.9465","2":"MOUSE8","3":"B"},{"1":"2.9564","2":"MOUSE9","3":"B"},{"1":"4.9153","2":"MOUSE10","3":"C"},{"1":"4.9910","2":"MOUSE11","3":"C"},{"1":"4.8853","2":"MOUSE12","3":"C"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["expression"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["mouse"],"name":[2],"type":["chr"],"align":["left"]},{"label":["treatment"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"0.9425","2":"MOUSE1","3":"CTRL"},{"1":"0.9224","2":"MOUSE2","3":"CTRL"},{"1":"1.0675","2":"MOUSE3","3":"CTRL"},{"1":"1.9700","2":"MOUSE4","3":"A"},{"1":"2.0204","2":"MOUSE5","3":"A"},{"1":"2.0303","2":"MOUSE6","3":"A"},{"1":"3.0623","2":"MOUSE7","3":"B"},{"1":"2.9547","2":"MOUSE8","3":"B"},{"1":"2.9967","2":"MOUSE9","3":"B"},{"1":"4.8688","2":"MOUSE10","3":"C"},{"1":"5.2282","2":"MOUSE11","3":"C"},{"1":"4.8479","2":"MOUSE12","3":"C"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   (Intercept) treatmentA treatmentB treatmentC
 1            1          0          0          0
@@ -352,50 +519,50 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.9482","3":"0.04458","4":"21.27","5":"0.000000025105539"},{"1":"treatmentA","2":"1.0462","3":"0.06305","4":"16.59","5":"0.000000175770125"},{"1":"treatmentB","2":"2.0273","3":"0.06305","4":"32.16","5":"0.000000000953090"},{"1":"treatmentC","2":"3.9823","3":"0.06305","4":"63.16","5":"0.000000000004389"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.9775","3":"0.06823","4":"14.33","5":"0.0000005502577"},{"1":"treatmentA","2":"1.0294","3":"0.09650","4":"10.67","5":"0.0000052273417"},{"1":"treatmentB","2":"2.0271","3":"0.09650","4":"21.01","5":"0.0000000276871"},{"1":"treatmentC","2":"4.0041","3":"0.09650","4":"41.49","5":"0.0000000001253"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"A - CTRL","3":"1.046","4":"0.06305","5":"16.59","6":"0.000000175770125","7":"0.9008","8":"1.192","9":"8"},{"1":"treatment","2":"B - CTRL","3":"2.027","4":"0.06305","5":"32.16","6":"0.000000000953090","7":"1.8819","8":"2.173","9":"8"},{"1":"treatment","2":"C - CTRL","3":"3.982","4":"0.06305","5":"63.16","6":"0.000000000004389","7":"3.8369","8":"4.128","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"A - CTRL","3":"1.029","4":"0.0965","5":"10.67","6":"0.0000052273417","7":"0.8069","8":"1.252","9":"8"},{"1":"treatment","2":"B - CTRL","3":"2.027","4":"0.0965","5":"21.01","6":"0.0000000276871","7":"1.8046","8":"2.250","9":"8"},{"1":"treatment","2":"C - CTRL","3":"4.004","4":"0.0965","5":"41.49","6":"0.0000000001253","7":"3.7816","8":"4.227","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*A"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="dv">2</span>), <span class="st">"*B"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">4</span>],<span class="dv">2</span>), <span class="st">"*C"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> treatment)) <span class="sc">+</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">3</span>],</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">4</span>],</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"treatment (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*A"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="dv">2</span>), <span class="st">"*B"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">4</span>],<span class="dv">2</span>), <span class="st">"*C"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">3</span>],</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">4</span>],</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"treatment (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   treatmentCTRL treatmentA treatmentB treatmentC
 1              1          0          0          0
@@ -418,58 +585,58 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"treatmentCTRL","2":"0.9482","3":"0.04458","4":"21.27","5":"0.00000002510553905"},{"1":"treatmentA","2":"1.9944","3":"0.04458","4":"44.74","5":"0.00000000006882150"},{"1":"treatmentB","2":"2.9755","3":"0.04458","4":"66.74","5":"0.00000000000282563"},{"1":"treatmentC","2":"4.9305","3":"0.04458","4":"110.60","5":"0.00000000000004992"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"treatmentCTRL","2":"0.9775","3":"0.06823","4":"14.33","5":"0.00000055025771"},{"1":"treatmentA","2":"2.0069","3":"0.06823","4":"29.41","5":"0.00000000193467"},{"1":"treatmentB","2":"3.0045","3":"0.06823","4":"44.03","5":"0.00000000007808"},{"1":"treatmentC","2":"4.9816","3":"0.06823","4":"73.01","5":"0.00000000000138"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"A - CTRL","3":"1.046","4":"0.06305","5":"16.59","6":"0.000000175770125","7":"0.9008","8":"1.192","9":"8"},{"1":"treatment","2":"B - CTRL","3":"2.027","4":"0.06305","5":"32.16","6":"0.000000000953090","7":"1.8819","8":"2.173","9":"8"},{"1":"treatment","2":"C - CTRL","3":"3.982","4":"0.06305","5":"63.16","6":"0.000000000004389","7":"3.8369","8":"4.128","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"A - CTRL","3":"1.029","4":"0.0965","5":"10.67","6":"0.0000052273417","7":"0.8069","8":"1.252","9":"8"},{"1":"treatment","2":"B - CTRL","3":"2.027","4":"0.0965","5":"21.01","6":"0.0000000276871","7":"1.8046","8":"2.250","9":"8"},{"1":"treatment","2":"C - CTRL","3":"4.004","4":"0.0965","5":"41.49","6":"0.0000000001253","7":"3.7816","8":"4.227","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"*CTRL"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*A"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="dv">2</span>), <span class="st">"*B"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">4</span>],<span class="dv">2</span>), <span class="st">"*C"</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> treatment)) <span class="sc">+</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">3</span>],</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">4</span>],</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"treatment (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"*CTRL"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*A"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="dv">2</span>), <span class="st">"*B"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">4</span>],<span class="dv">2</span>), <span class="st">"*C"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">3</span>],</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">4</span>],</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"treatment (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">=</span> <span class="fu">makeContrasts</span>(</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  treatmentA<span class="sc">-</span>treatmentCTRL,</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  treatmentB<span class="sc">-</span>treatmentCTRL, </span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  treatmentC<span class="sc">-</span>treatmentCTRL,</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels=</span><span class="fu">colnames</span>(design))</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(contrasts) <span class="ot">&lt;-</span> <span class="fu">abbreviate</span>(<span class="fu">colnames</span>(contrasts))</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>contrasts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">=</span> <span class="fu">makeContrasts</span>(</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  treatmentA<span class="sc">-</span>treatmentCTRL,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  treatmentB<span class="sc">-</span>treatmentCTRL, </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  treatmentC<span class="sc">-</span>treatmentCTRL,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels=</span><span class="fu">colnames</span>(design))</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(contrasts) <span class="ot">&lt;-</span> <span class="fu">abbreviate</span>(<span class="fu">colnames</span>(contrasts))</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>contrasts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Contrasts
 Levels          tA-t tB-t tC-t
@@ -479,8 +646,11 @@ Levels          tA-t tB-t tC-t
   treatmentC       0    0    1</code></pre>
 </div>
 </div>
+</section>
+<section id="control-vs-the-rest" class="level3">
+<h3 class="anchored" data-anchor-id="control-vs-the-rest">Control vs the rest</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>((treatmentA <span class="sc">+</span> treatmentB <span class="sc">+</span> treatmentC)<span class="sc">/</span><span class="dv">3</span> <span class="sc">-</span> treatmentCTRL, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>((treatmentA <span class="sc">+</span> treatmentB <span class="sc">+</span> treatmentC)<span class="sc">/</span><span class="dv">3</span> <span class="sc">-</span> treatmentCTRL, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Contrasts
 Levels          (treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL
@@ -490,8 +660,11 @@ Levels          (treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL
   treatmentC                                                      0.3333</code></pre>
 </div>
 </div>
+</section>
+<section id="vs-2-group-comparisons" class="level3">
+<h3 class="anchored" data-anchor-id="vs-2-group-comparisons">2 vs 2 group comparisons</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>((treatmentCTRL <span class="sc">+</span> treatmentC)<span class="sc">/</span><span class="dv">2</span> <span class="sc">-</span> (treatmentA <span class="sc">+</span> treatmentB)<span class="sc">/</span><span class="dv">2</span>, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>((treatmentCTRL <span class="sc">+</span> treatmentC)<span class="sc">/</span><span class="dv">2</span> <span class="sc">-</span> (treatmentA <span class="sc">+</span> treatmentB)<span class="sc">/</span><span class="dv">2</span>, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Contrasts
 Levels          (treatmentCTRL + treatmentC)/2 - (treatmentA + treatmentB)/2
@@ -501,23 +674,32 @@ Levels          (treatmentCTRL + treatmentC)/2 - (treatmentA + treatmentB)/2
   treatmentC                                                             0.5</code></pre>
 </div>
 </div>
+</section>
+</section>
+<section id="study-of-interactions-and-additivity-of-treatments" class="level2">
+<h2 class="anchored" data-anchor-id="study-of-interactions-and-additivity-of-treatments">Study of interactions and additivity of treatments</h2>
+<section id="interactions-using-a-single-factor-model" class="level3">
+<h3 class="anchored" data-anchor-id="interactions-using-a-single-factor-model">Interactions using a single factor model</h3>
+</section>
+<section id="interactions-using-a-two-factor-model" class="level3">
+<h3 class="anchored" data-anchor-id="interactions-using-a-two-factor-model">Interactions using a two-factor model</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>treat1 <span class="ot">&lt;-</span> <span class="fu">as_factor</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>treat2 <span class="ot">&lt;-</span> <span class="fu">as_factor</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(treat1) <span class="ot">=</span> <span class="fu">levels</span>(treat2) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"NO"</span>, <span class="st">"YES"</span>)</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, treat1, treat2)</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>treat1 <span class="ot">&lt;-</span> <span class="fu">as_factor</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>treat2 <span class="ot">&lt;-</span> <span class="fu">as_factor</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(treat1) <span class="ot">=</span> <span class="fu">levels</span>(treat2) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"NO"</span>, <span class="st">"YES"</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, treat1, treat2)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["treat1"],"name":[3],"type":["fct"],"align":["left"]},{"label":["treat2"],"name":[4],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"1.0763","3":"NO","4":"NO"},{"1":"MOUSE2","2":"0.9044","3":"NO","4":"NO"},{"1":"MOUSE3","2":"0.8639","3":"NO","4":"NO"},{"1":"MOUSE4","2":"2.0672","3":"YES","4":"NO"},{"1":"MOUSE5","2":"1.9089","3":"YES","4":"NO"},{"1":"MOUSE6","2":"2.0071","3":"YES","4":"NO"},{"1":"MOUSE7","2":"3.0237","3":"NO","4":"YES"},{"1":"MOUSE8","2":"2.9465","3":"NO","4":"YES"},{"1":"MOUSE9","2":"2.9564","3":"NO","4":"YES"},{"1":"MOUSE10","2":"4.9153","3":"YES","4":"YES"},{"1":"MOUSE11","2":"4.9910","3":"YES","4":"YES"},{"1":"MOUSE12","2":"4.8853","3":"YES","4":"YES"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["treat1"],"name":[3],"type":["fct"],"align":["left"]},{"label":["treat2"],"name":[4],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"0.9425","3":"NO","4":"NO"},{"1":"MOUSE2","2":"0.9224","3":"NO","4":"NO"},{"1":"MOUSE3","2":"1.0675","3":"NO","4":"NO"},{"1":"MOUSE4","2":"1.9700","3":"YES","4":"NO"},{"1":"MOUSE5","2":"2.0204","3":"YES","4":"NO"},{"1":"MOUSE6","2":"2.0303","3":"YES","4":"NO"},{"1":"MOUSE7","2":"3.0623","3":"NO","4":"YES"},{"1":"MOUSE8","2":"2.9547","3":"NO","4":"YES"},{"1":"MOUSE9","2":"2.9967","3":"NO","4":"YES"},{"1":"MOUSE10","2":"4.8688","3":"YES","4":"YES"},{"1":"MOUSE11","2":"5.2282","3":"YES","4":"YES"},{"1":"MOUSE12","2":"4.8479","3":"YES","4":"YES"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   (Intercept) treat1YES treat2YES treat1YES:treat2YES
 1            1         0         0                   0
@@ -543,19 +725,43 @@ attr(,"contrasts")$treat2
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.9482","3":"0.04458","4":"21.27","5":"0.0000000251055"},{"1":"treat1YES","2":"1.0462","3":"0.06305","4":"16.59","5":"0.0000001757701"},{"1":"treat2YES","2":"2.0273","3":"0.06305","4":"32.16","5":"0.0000000009531"},{"1":"treat1YES:treat2YES","2":"0.9088","3":"0.08916","4":"10.19","5":"0.0000073584842"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.9775","3":"0.06823","4":"14.325","5":"0.00000055026"},{"1":"treat1YES","2":"1.0294","3":"0.09650","4":"10.668","5":"0.00000522734"},{"1":"treat2YES","2":"2.0271","3":"0.09650","4":"21.007","5":"0.00000002769"},{"1":"treat1YES:treat2YES","2":"0.9476","3":"0.13647","4":"6.944","5":"0.00011913799"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treat1","2":"YES - NO","3":"1.503","4":"0.06823","5":"22.03","6":"0.0000000190289","7":"1.346","8":"1.661","9":"8"},{"1":"treat2","2":"YES - NO","3":"2.501","4":"0.06823","5":"36.65","6":"0.0000000003366","7":"2.344","8":"2.658","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="additivity-using-a-two-factor-model" class="level3">
+<h3 class="anchored" data-anchor-id="additivity-using-a-two-factor-model">Additivity using a two-factor model</h3>
+<p>XXX</p>
+</section>
+</section>
+<section id="studies-with-multiple-factors" class="level2">
+<h2 class="anchored" data-anchor-id="studies-with-multiple-factors">Studies with multiple factors</h2>
+<p>XXX</p>
+</section>
+<section id="studies-with-multiple-covariates-and-factors" class="level2">
+<h2 class="anchored" data-anchor-id="studies-with-multiple-covariates-and-factors">Studies with multiple covariates (and factors)</h2>
+<p>XXX</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.2.2 (2022-10-31)
 Platform: x86_64-apple-darwin17.0 (64-bit)
@@ -579,17 +785,18 @@ other attached packages:
 [13] ggplot2_3.4.1          tidyverse_2.0.0       
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.10       compiler_4.2.2    pillar_1.8.1      tools_4.2.2      
- [5] digest_0.6.31     checkmate_2.1.0   timechange_0.2.0  jsonlite_1.8.4   
- [9] evaluate_0.20     lifecycle_1.0.3   gtable_0.3.1      pkgconfig_2.0.3  
-[13] rlang_1.0.6       cli_3.6.0         rstudioapi_0.14   yaml_2.3.7       
-[17] xfun_0.37         fastmap_1.1.1     withr_2.5.0       knitr_1.42       
-[21] generics_0.1.3    vctrs_0.5.2       htmlwidgets_1.6.1 hms_1.1.2        
-[25] grid_4.2.2        tidyselect_1.2.0  data.table_1.14.8 glue_1.6.2       
-[29] R6_2.5.1          fansi_1.0.4       rmarkdown_2.20    farver_2.1.1     
-[33] tzdb_0.3.0        backports_1.4.1   ellipsis_0.3.2    scales_1.2.1     
-[37] htmltools_0.5.4   insight_0.19.0    colorspace_2.1-0  labeling_0.4.2   
-[41] utf8_1.2.3        stringi_1.7.12    munsell_0.5.0    </code></pre>
+ [1] tidyselect_1.2.0  xfun_0.37         splines_4.2.2     lattice_0.20-45  
+ [5] colorspace_2.1-0  vctrs_0.5.2       generics_0.1.3    htmltools_0.5.4  
+ [9] yaml_2.3.7        mgcv_1.8-42       utf8_1.2.3        rlang_1.0.6      
+[13] pillar_1.8.1      glue_1.6.2        withr_2.5.0       lifecycle_1.0.3  
+[17] munsell_0.5.0     gtable_0.3.1      htmlwidgets_1.6.1 evaluate_0.20    
+[21] labeling_0.4.2    knitr_1.42        tzdb_0.3.0        fastmap_1.1.1    
+[25] fansi_1.0.4       Rcpp_1.0.10       checkmate_2.1.0   scales_1.2.1     
+[29] backports_1.4.1   jsonlite_1.8.4    farver_2.1.1      hms_1.1.2        
+[33] digest_0.6.31     stringi_1.7.12    insight_0.19.0    grid_4.2.2       
+[37] cli_3.6.0         tools_4.2.2       pkgconfig_2.0.3   ellipsis_0.3.2   
+[41] Matrix_1.5-3      data.table_1.14.8 timechange_0.2.0  rmarkdown_2.20   
+[45] rstudioapi_0.14   R6_2.5.1          nlme_3.1-162      compiler_4.2.2   </code></pre>
 </div>
 </div>
 </section>
