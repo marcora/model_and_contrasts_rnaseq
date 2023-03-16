@@ -22,7 +22,6 @@ library(marginaleffects)
 library(limma)
 
 theme_set(theme_bw())
-set.seed(1981)
 ```
 
 ## Common statistical tests are regression models
@@ -79,6 +78,8 @@ y = a + b x
 $$
 
 ```{r}
+set.seed(1981)
+
 a = 2
 b = 2
 x = seq(2, 12, by = 2)
@@ -154,6 +155,8 @@ $$
 $$
 
 ```{r}
+set.seed(20190429)
+
 mouse = paste0("MOUSE", 1:6)
 age = c(1,2,3,4,5,6)
 expression = 2 + 0.5 * age + rnorm(n = 6, sd = 0.1)
@@ -341,16 +344,17 @@ contrasts
 makeContrasts((treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL, levels=colnames(design))
 ```
 
-### 2 vs 2 group comparisons
-
-```{r}
-makeContrasts((treatmentCTRL + treatmentC)/2 - (treatmentA + treatmentB)/2, levels=colnames(design))
-
-```
-
 ## Studies of interactions and additivity of treatments
 
 ### Interactions using a single factor model
+
+Same as the multiple treatment models above but considering treatment C as the combination of treatment A and B and testing whether its effect (b3) equals the sum of the effects of A (b1) and B (b2).
+
+```{r}
+avg_comparisons(fit)
+avg_comparisons(fit, hypothesis = "b3 = b1 + b2", df = insight::get_df(fit))
+avg_comparisons(fit, hypothesis = "b3 - b1 - b2 = 0", df = insight::get_df(fit))
+```
 
 ### Interactions using a two-factor model
 
@@ -377,7 +381,18 @@ avg_comparisons(fit, df = insight::get_df(fit))
 
 ### Additivity using a two-factor model
 
-XXX
+```{r}
+(design = model.matrix(expression ~ treat1 + treat2, data))
+```
+
+```{r}
+fit = lm(expression ~ treat1 + treat2, data)
+tidy(fit)
+```
+
+```{r}
+avg_comparisons(fit, df = insight::get_df(fit))
+```
 
 ## Studies with multiple factors
 
