@@ -245,7 +245,7 @@ y_i \sim \mathcal{N}(\mu_i, \sigma^2)
 y \sim 1 + x
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> x, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept)  x
 1           1  2
@@ -259,7 +259,7 @@ attr(,"assign")
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> x)</span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> x, data)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
@@ -277,13 +277,10 @@ attr(,"assign")
 e_i = y_i - \hat{y}_i
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> a <span class="sc">+</span> b <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="fu">length</span>(x), <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(x, y)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> a, <span class="at">slope =</span> b) <span class="sc">+</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_abline(intercept = fit$coefficients[1], slope = fit$coefficients[2], color = "red") +</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"orange"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> a, <span class="at">slope =</span> b) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"orange"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -304,13 +301,13 @@ e_i = y_i - \hat{y}_i
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["age"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"MOUSE1","2":"2.394","3":"1"},{"1":"MOUSE2","2":"2.868","3":"2"},{"1":"MOUSE3","2":"3.420","3":"3"},{"1":"MOUSE4","2":"3.993","3":"4"},{"1":"MOUSE5","2":"4.519","3":"5"},{"1":"MOUSE6","2":"5.198","3":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["age"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"MOUSE1","2":"2.473","3":"1"},{"1":"MOUSE2","2":"2.719","3":"2"},{"1":"MOUSE3","2":"3.491","3":"3"},{"1":"MOUSE4","2":"3.983","3":"4"},{"1":"MOUSE5","2":"4.708","3":"5"},{"1":"MOUSE6","2":"4.992","3":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> age))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> age, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept) age
 1           1   1
@@ -324,13 +321,13 @@ attr(,"assign")
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> age)</span>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> age, data)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.7771","3":"0.05294","4":"33.57","5":"0.000004697"},{"1":"age","2":"0.5585","3":"0.01359","4":"41.09","5":"0.000002097"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.8221","3":"0.13651","4":"13.35","5":"0.0001822"},{"1":"age","2":"0.5445","3":"0.03505","4":"15.53","5":"0.0001003"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -361,13 +358,13 @@ attr(,"assign")
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"2.394","3":"WT"},{"1":"MOUSE2","2":"2.868","3":"WT"},{"1":"MOUSE3","2":"3.420","3":"WT"},{"1":"MOUSE4","2":"3.993","3":"KO"},{"1":"MOUSE5","2":"4.519","3":"KO"},{"1":"MOUSE6","2":"5.198","3":"KO"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"2.473","3":"WT"},{"1":"MOUSE2","2":"2.719","3":"WT"},{"1":"MOUSE3","2":"3.491","3":"WT"},{"1":"MOUSE4","2":"3.983","3":"KO"},{"1":"MOUSE5","2":"4.708","3":"KO"},{"1":"MOUSE6","2":"4.992","3":"KO"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept) groupKO
 1           1       0
@@ -384,13 +381,13 @@ attr(,"contrasts")$group
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group)</span>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> group, data)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"2.894","3":"0.3237","4":"8.940","5":"0.0008657"},{"1":"groupKO","2":"1.676","3":"0.4577","4":"3.662","5":"0.0215457"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"2.894","3":"0.3034","4":"9.538","5":"0.0006749"},{"1":"groupKO","2":"1.667","3":"0.4291","4":"3.885","5":"0.0177692"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -415,7 +412,7 @@ attr(,"contrasts")$group
 <section id="mean-reference-model-for-factors" class="level3">
 <h3 class="anchored" data-anchor-id="mean-reference-model-for-factors">Mean-reference model for factors</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> group))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> group, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  groupWT groupKO
 1       1       0
@@ -432,13 +429,13 @@ attr(,"contrasts")$group
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> group)</span>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> group, data)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"groupWT","2":"2.894","3":"0.3237","4":"8.94","5":"0.0008657"},{"1":"groupKO","2":"4.570","3":"0.3237","4":"14.12","5":"0.0001461"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"groupWT","2":"2.894","3":"0.3034","4":"9.538","5":"0.0006749"},{"1":"groupKO","2":"4.561","3":"0.3034","4":"15.032","5":"0.0001141"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -490,13 +487,13 @@ Levels    groupKO - groupWT
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["expression"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["mouse"],"name":[2],"type":["chr"],"align":["left"]},{"label":["treatment"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"0.9425","2":"MOUSE1","3":"CTRL"},{"1":"0.9224","2":"MOUSE2","3":"CTRL"},{"1":"1.0675","2":"MOUSE3","3":"CTRL"},{"1":"1.9700","2":"MOUSE4","3":"A"},{"1":"2.0204","2":"MOUSE5","3":"A"},{"1":"2.0303","2":"MOUSE6","3":"A"},{"1":"3.0623","2":"MOUSE7","3":"B"},{"1":"2.9547","2":"MOUSE8","3":"B"},{"1":"2.9967","2":"MOUSE9","3":"B"},{"1":"4.8688","2":"MOUSE10","3":"C"},{"1":"5.2282","2":"MOUSE11","3":"C"},{"1":"4.8479","2":"MOUSE12","3":"C"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["expression"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["mouse"],"name":[2],"type":["chr"],"align":["left"]},{"label":["treatment"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"0.8938","2":"MOUSE1","3":"CTRL"},{"1":"0.8677","2":"MOUSE2","3":"CTRL"},{"1":"0.9198","2":"MOUSE3","3":"CTRL"},{"1":"1.9930","2":"MOUSE4","3":"A"},{"1":"2.0189","2":"MOUSE5","3":"A"},{"1":"2.1979","2":"MOUSE6","3":"A"},{"1":"2.9425","2":"MOUSE7","3":"B"},{"1":"2.9224","2":"MOUSE8","3":"B"},{"1":"3.0675","2":"MOUSE9","3":"B"},{"1":"4.9700","2":"MOUSE10","3":"C"},{"1":"5.0204","2":"MOUSE11","3":"C"},{"1":"5.0303","2":"MOUSE12","3":"C"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   (Intercept) treatmentA treatmentB treatmentC
 1            1          0          0          0
@@ -519,13 +516,13 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment)</span>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment, data)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.9775","3":"0.06823","4":"14.33","5":"0.0000005502577"},{"1":"treatmentA","2":"1.0294","3":"0.09650","4":"10.67","5":"0.0000052273417"},{"1":"treatmentB","2":"2.0271","3":"0.09650","4":"21.01","5":"0.0000000276871"},{"1":"treatmentC","2":"4.0041","3":"0.09650","4":"41.49","5":"0.0000000001253"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.8937","3":"0.04119","4":"21.70","5":"0.000000021458179"},{"1":"treatmentA","2":"1.1762","3":"0.05825","4":"20.19","5":"0.000000037802570"},{"1":"treatmentB","2":"2.0837","3":"0.05825","4":"35.77","5":"0.000000000408576"},{"1":"treatmentC","2":"4.1132","3":"0.05825","4":"70.61","5":"0.000000000001802"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -536,7 +533,7 @@ attr(,"contrasts")$treatment
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"A - CTRL","3":"1.029","4":"0.0965","5":"10.67","6":"0.0000052273417","7":"0.8069","8":"1.252","9":"8"},{"1":"treatment","2":"B - CTRL","3":"2.027","4":"0.0965","5":"21.01","6":"0.0000000276871","7":"1.8046","8":"2.250","9":"8"},{"1":"treatment","2":"C - CTRL","3":"4.004","4":"0.0965","5":"41.49","6":"0.0000000001253","7":"3.7816","8":"4.227","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"A - CTRL","3":"1.176","4":"0.05825","5":"20.19","6":"0.000000037802570","7":"1.042","8":"1.311","9":"8"},{"1":"treatment","2":"B - CTRL","3":"2.084","4":"0.05825","5":"35.77","6":"0.000000000408576","7":"1.949","8":"2.218","9":"8"},{"1":"treatment","2":"C - CTRL","3":"4.113","4":"0.05825","5":"70.61","6":"0.000000000001802","7":"3.979","8":"4.247","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -562,7 +559,7 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   treatmentCTRL treatmentA treatmentB treatmentC
 1              1          0          0          0
@@ -585,13 +582,13 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment)</span>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data)</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"treatmentCTRL","2":"0.9775","3":"0.06823","4":"14.33","5":"0.00000055025771"},{"1":"treatmentA","2":"2.0069","3":"0.06823","4":"29.41","5":"0.00000000193467"},{"1":"treatmentB","2":"3.0045","3":"0.06823","4":"44.03","5":"0.00000000007808"},{"1":"treatmentC","2":"4.9816","3":"0.06823","4":"73.01","5":"0.00000000000138"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"treatmentCTRL","2":"0.8937","3":"0.04119","4":"21.70","5":"0.00000002145817906"},{"1":"treatmentA","2":"2.0699","3":"0.04119","4":"50.25","5":"0.00000000002722875"},{"1":"treatmentB","2":"2.9775","3":"0.04119","4":"72.28","5":"0.00000000000149437"},{"1":"treatmentC","2":"5.0069","3":"0.04119","4":"121.55","5":"0.00000000000002345"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -602,7 +599,7 @@ attr(,"contrasts")$treatment
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"A - CTRL","3":"1.029","4":"0.0965","5":"10.67","6":"0.0000052273417","7":"0.8069","8":"1.252","9":"8"},{"1":"treatment","2":"B - CTRL","3":"2.027","4":"0.0965","5":"21.01","6":"0.0000000276871","7":"1.8046","8":"2.250","9":"8"},{"1":"treatment","2":"C - CTRL","3":"4.004","4":"0.0965","5":"41.49","6":"0.0000000001253","7":"3.7816","8":"4.227","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"A - CTRL","3":"1.176","4":"0.05825","5":"20.19","6":"0.000000037802570","7":"1.042","8":"1.311","9":"8"},{"1":"treatment","2":"B - CTRL","3":"2.084","4":"0.05825","5":"35.77","6":"0.000000000408576","7":"1.949","8":"2.218","9":"8"},{"1":"treatment","2":"C - CTRL","3":"4.113","4":"0.05825","5":"70.61","6":"0.000000000001802","7":"3.979","8":"4.247","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -693,13 +690,13 @@ Levels          (treatmentCTRL + treatmentC)/2 - (treatmentA + treatmentB)/2
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["treat1"],"name":[3],"type":["fct"],"align":["left"]},{"label":["treat2"],"name":[4],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"0.9425","3":"NO","4":"NO"},{"1":"MOUSE2","2":"0.9224","3":"NO","4":"NO"},{"1":"MOUSE3","2":"1.0675","3":"NO","4":"NO"},{"1":"MOUSE4","2":"1.9700","3":"YES","4":"NO"},{"1":"MOUSE5","2":"2.0204","3":"YES","4":"NO"},{"1":"MOUSE6","2":"2.0303","3":"YES","4":"NO"},{"1":"MOUSE7","2":"3.0623","3":"NO","4":"YES"},{"1":"MOUSE8","2":"2.9547","3":"NO","4":"YES"},{"1":"MOUSE9","2":"2.9967","3":"NO","4":"YES"},{"1":"MOUSE10","2":"4.8688","3":"YES","4":"YES"},{"1":"MOUSE11","2":"5.2282","3":"YES","4":"YES"},{"1":"MOUSE12","2":"4.8479","3":"YES","4":"YES"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["treat1"],"name":[3],"type":["fct"],"align":["left"]},{"label":["treat2"],"name":[4],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"0.8938","3":"NO","4":"NO"},{"1":"MOUSE2","2":"0.8677","3":"NO","4":"NO"},{"1":"MOUSE3","2":"0.9198","3":"NO","4":"NO"},{"1":"MOUSE4","2":"1.9930","3":"YES","4":"NO"},{"1":"MOUSE5","2":"2.0189","3":"YES","4":"NO"},{"1":"MOUSE6","2":"2.1979","3":"YES","4":"NO"},{"1":"MOUSE7","2":"2.9425","3":"NO","4":"YES"},{"1":"MOUSE8","2":"2.9224","3":"NO","4":"YES"},{"1":"MOUSE9","2":"3.0675","3":"NO","4":"YES"},{"1":"MOUSE10","2":"4.9700","3":"YES","4":"YES"},{"1":"MOUSE11","2":"5.0204","3":"YES","4":"YES"},{"1":"MOUSE12","2":"5.0303","3":"YES","4":"YES"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   (Intercept) treat1YES treat2YES treat1YES:treat2YES
 1            1         0         0                   0
@@ -725,13 +722,13 @@ attr(,"contrasts")$treat2
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2)</span>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2, data)</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.9775","3":"0.06823","4":"14.325","5":"0.00000055026"},{"1":"treat1YES","2":"1.0294","3":"0.09650","4":"10.668","5":"0.00000522734"},{"1":"treat2YES","2":"2.0271","3":"0.09650","4":"21.007","5":"0.00000002769"},{"1":"treat1YES:treat2YES","2":"0.9476","3":"0.13647","4":"6.944","5":"0.00011913799"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.8937","3":"0.04119","4":"21.70","5":"0.0000000214582"},{"1":"treat1YES","2":"1.1762","3":"0.05825","4":"20.19","5":"0.0000000378026"},{"1":"treat2YES","2":"2.0837","3":"0.05825","4":"35.77","5":"0.0000000004086"},{"1":"treat1YES:treat2YES","2":"0.8532","3":"0.08238","4":"10.36","5":"0.0000065283943"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -742,7 +739,7 @@ attr(,"contrasts")$treat2
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treat1","2":"YES - NO","3":"1.503","4":"0.06823","5":"22.03","6":"0.0000000190289","7":"1.346","8":"1.661","9":"8"},{"1":"treat2","2":"YES - NO","3":"2.501","4":"0.06823","5":"36.65","6":"0.0000000003366","7":"2.344","8":"2.658","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treat1","2":"YES - NO","3":"1.603","4":"0.04119","5":"38.91","6":"0.00000000020909","7":"1.508","8":"1.698","9":"8"},{"1":"treat2","2":"YES - NO","3":"2.510","4":"0.04119","5":"60.94","6":"0.00000000000584","7":"2.415","8":"2.605","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -768,13 +765,13 @@ attr(,"contrasts")$treat2
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["tissue"],"name":[3],"type":["fct"],"align":["left"]},{"label":["cells"],"name":[4],"type":["fct"],"align":["left"]},{"label":["grp"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"0.9425","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE2","2":"0.9224","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE3","2":"1.0675","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE4","2":"1.9700","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE5","2":"2.0204","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE6","2":"2.0303","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE7","2":"3.0623","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE8","2":"2.9547","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE9","2":"2.9967","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE10","2":"4.8688","3":"BRAIN","4":"T","5":"BRAIN:T"},{"1":"MOUSE11","2":"5.2282","3":"BRAIN","4":"T","5":"BRAIN:T"},{"1":"MOUSE12","2":"4.8479","3":"BRAIN","4":"T","5":"BRAIN:T"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["tissue"],"name":[3],"type":["fct"],"align":["left"]},{"label":["cells"],"name":[4],"type":["fct"],"align":["left"]},{"label":["grp"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"0.8938","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE2","2":"0.8677","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE3","2":"0.9198","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE4","2":"1.9930","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE5","2":"2.0189","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE6","2":"2.1979","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE7","2":"2.9425","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE8","2":"2.9224","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE9","2":"3.0675","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE10","2":"4.9700","3":"BRAIN","4":"T","5":"BRAIN:T"},{"1":"MOUSE11","2":"5.0204","3":"BRAIN","4":"T","5":"BRAIN:T"},{"1":"MOUSE12","2":"5.0303","3":"BRAIN","4":"T","5":"BRAIN:T"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> grp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> grp, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   grpLUNG:B grpBRAIN:B grpLUNG:T grpBRAIN:T
 1          1          0         0          0
@@ -797,13 +794,13 @@ attr(,"contrasts")$grp
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> grp)</span>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> grp, data)</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"grpLUNG:B","2":"0.9775","3":"0.06823","4":"14.33","5":"0.00000055025771"},{"1":"grpBRAIN:B","2":"2.0069","3":"0.06823","4":"29.41","5":"0.00000000193467"},{"1":"grpLUNG:T","2":"3.0045","3":"0.06823","4":"44.03","5":"0.00000000007808"},{"1":"grpBRAIN:T","2":"4.9816","3":"0.06823","4":"73.01","5":"0.00000000000138"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"grpLUNG:B","2":"0.8937","3":"0.04119","4":"21.70","5":"0.00000002145817906"},{"1":"grpBRAIN:B","2":"2.0699","3":"0.04119","4":"50.25","5":"0.00000000002722875"},{"1":"grpLUNG:T","2":"2.9775","3":"0.04119","4":"72.28","5":"0.00000000000149437"},{"1":"grpBRAIN:T","2":"5.0069","3":"0.04119","4":"121.55","5":"0.00000000000002345"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -814,7 +811,7 @@ attr(,"contrasts")$grp
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"grp","2":"BRAIN:B - LUNG:B","3":"1.029","4":"0.0965","5":"10.67","6":"0.0000052273417","7":"0.8069","8":"1.252","9":"8"},{"1":"grp","2":"BRAIN:T - LUNG:B","3":"4.004","4":"0.0965","5":"41.49","6":"0.0000000001253","7":"3.7816","8":"4.227","9":"8"},{"1":"grp","2":"LUNG:T - LUNG:B","3":"2.027","4":"0.0965","5":"21.01","6":"0.0000000276871","7":"1.8046","8":"2.250","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"grp","2":"BRAIN:B - LUNG:B","3":"1.176","4":"0.05825","5":"20.19","6":"0.000000037802570","7":"1.042","8":"1.311","9":"8"},{"1":"grp","2":"BRAIN:T - LUNG:B","3":"4.113","4":"0.05825","5":"70.61","6":"0.000000000001802","7":"3.979","8":"4.247","9":"8"},{"1":"grp","2":"LUNG:T - LUNG:B","3":"2.084","4":"0.05825","5":"35.77","6":"0.000000000408576","7":"1.949","8":"2.218","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>

@@ -123,11 +123,11 @@ y \sim 1 + x
 $$
 
 ```{r}
-(design = model.matrix(y ~ 1 + x))
+(design = model.matrix(y ~ 1 + x, data))
 ```
 
 ```{r}
-fit = lm(y ~ 1 + x)
+fit = lm(y ~ 1 + x, data)
 tidy(fit)
 ```
 
@@ -141,12 +141,9 @@ $$
 
 ```{r}
 #| message: false
-y = a + b * x + rnorm(n = length(x), sd = 1)
-data = tibble(x, y)
 ggplot(data, aes(x = x, y = y)) +
   geom_point() +
   geom_abline(intercept = a, slope = b) +
-  # geom_abline(intercept = fit$coefficients[1], slope = fit$coefficients[2], color = "red") +
   geom_smooth(method = "lm", color = "orange")
 ```
 
@@ -165,11 +162,11 @@ data
 ```
 
 ```{r}
-(design = model.matrix(expression ~ 1 + age))
+(design = model.matrix(expression ~ 1 + age, data))
 ```
 
 ```{r}
-fit = lm(expression ~ 1 + age)
+fit = lm(expression ~ 1 + age, data)
 tidy(fit)
 ```
 
@@ -195,11 +192,11 @@ data
 ```
 
 ```{r}
-(design = model.matrix(expression ~ 1 + group))
+(design = model.matrix(expression ~ 1 + group, data))
 ```
 
 ```{r}
-fit = lm(expression ~ 1 + group)
+fit = lm(expression ~ 1 + group, data)
 tidy(fit)
 ```
 
@@ -220,11 +217,11 @@ ggplot(data, aes(y = expression, x = group)) +
 ### Mean-reference model for factors
 
 ```{r}
-(design = model.matrix(expression ~ 0 + group))
+(design = model.matrix(expression ~ 0 + group, data))
 ```
 
 ```{r}
-fit = lm(expression ~ 0 + group)
+fit = lm(expression ~ 0 + group, data)
 tidy(fit)
 ```
 
@@ -265,11 +262,11 @@ data
 ```
 
 ```{r}
-(design = model.matrix(expression ~ 1 + treatment))
+(design = model.matrix(expression ~ 1 + treatment, data))
 ```
 
 ```{r}
-fit = lm(expression ~ 1 + treatment)
+fit = lm(expression ~ 1 + treatment, data)
 tidy(fit)
 ```
 
@@ -296,11 +293,11 @@ ggplot(data, aes(y = expression, x = treatment)) +
 ```
 
 ```{r}
-(design = model.matrix(expression ~ 0 + treatment))
+(design = model.matrix(expression ~ 0 + treatment, data))
 ```
 
 ```{r}
-fit = lm(expression ~ 0 + treatment)
+fit = lm(expression ~ 0 + treatment, data)
 tidy(fit)
 ```
 
@@ -366,11 +363,11 @@ data
 ```
 
 ```{r}
-(design = model.matrix(expression ~ treat1 * treat2))
+(design = model.matrix(expression ~ treat1 * treat2, data))
 ```
 
 ```{r}
-fit = lm(expression ~ treat1 * treat2)
+fit = lm(expression ~ treat1 * treat2, data)
 tidy(fit)
 ```
 
@@ -396,11 +393,11 @@ data
 ```
 
 ```{r}
-(design = model.matrix(expression ~ 0 + grp))
+(design = model.matrix(expression ~ 0 + grp, data))
 ```
 
 ```{r}
-fit = lm(expression ~ 0 + grp)
+fit = lm(expression ~ 0 + grp, data)
 tidy(fit)
 ```
 
