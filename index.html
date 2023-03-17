@@ -289,6 +289,7 @@ e_i = y_i - \hat{y}_i
 </section>
 <section id="regression-model-for-covariates" class="level3">
 <h3 class="anchored" data-anchor-id="regression-model-for-covariates">Regression model for covariates</h3>
+<p>A contrast is a linear combination of parameters/statistics. Another word for a linear combination is a weighted sum.</p>
 <p><span class="math display">\[
 \text{expression} = \beta_0 + \beta_1 \text{age}
 \]</span></p>
@@ -468,6 +469,18 @@ Levels    groupKO - groupWT
   groupKO                 1</code></pre>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lmFit</span>(expression, design)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">=</span> <span class="fu">makeContrasts</span>(groupKO <span class="sc">-</span> groupWT, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts.fit</span>(fit, contrasts)<span class="sc">$</span>coefficient</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Contrasts
+       groupKO - groupWT
+  [1,]             1.623</code></pre>
+</div>
+</div>
 </section>
 </section>
 <section id="design-and-contrast-matrices" class="level2">
@@ -479,13 +492,13 @@ Levels    groupKO - groupWT
 <section id="all-pairwise-comparisons" class="level3">
 <h3 class="anchored" data-anchor-id="all-pairwise-comparisons">All pairwise comparisons</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"CTRL"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>), <span class="at">each=</span><span class="dv">3</span>))</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">length</span>(treatment)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>expression <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="at">each=</span><span class="dv">3</span>) <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>expression <span class="ot">=</span> expression <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="fl">0.1</span>)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>mouse <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"MOUSE"</span>, <span class="dv">1</span><span class="sc">:</span>n)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(expression, mouse, treatment)</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"CTRL"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>), <span class="at">each=</span><span class="dv">3</span>))</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">length</span>(treatment)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>expression <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="at">each=</span><span class="dv">3</span>) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>expression <span class="ot">=</span> expression <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span><span class="fl">0.1</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>mouse <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"MOUSE"</span>, <span class="dv">1</span><span class="sc">:</span>n)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(expression, mouse, treatment)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -496,7 +509,7 @@ Levels    groupKO - groupWT
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   (Intercept) treatmentA treatmentB treatmentC
 1            1          0          0          0
@@ -519,8 +532,8 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment, data)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treatment, data)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -531,7 +544,7 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -542,27 +555,27 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*A"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="dv">2</span>), <span class="st">"*B"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">4</span>],<span class="dv">2</span>), <span class="st">"*C"</span>)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> treatment)) <span class="sc">+</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">3</span>],</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">4</span>],</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"treatment (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*A"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="dv">2</span>), <span class="st">"*B"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">4</span>],<span class="dv">2</span>), <span class="st">"*C"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">3</span>],</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fit<span class="sc">$</span>coef[<span class="dv">4</span>],</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"treatment (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   treatmentCTRL treatmentA treatmentB treatmentC
 1              1          0          0          0
@@ -585,8 +598,8 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -597,7 +610,7 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -608,35 +621,35 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"*CTRL"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*A"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="dv">2</span>), <span class="st">"*B"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">4</span>],<span class="dv">2</span>), <span class="st">"*C"</span>)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> treatment)) <span class="sc">+</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">3</span>],</span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">4</span>],</span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"treatment (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>model.name <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"E(y)="</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">1</span>],<span class="dv">2</span>), <span class="st">"*CTRL"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">2</span>],<span class="dv">2</span>), <span class="st">"*A"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">3</span>],<span class="dv">2</span>), <span class="st">"*B"</span>, <span class="st">"+"</span>, <span class="fu">round</span>(fit<span class="sc">$</span>coef[<span class="dv">4</span>],<span class="dv">2</span>), <span class="st">"*C"</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> expression, <span class="at">x =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">1</span>],</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">2</span>],</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">3</span>],</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> fit<span class="sc">$</span>coef[<span class="dv">4</span>],</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> model.name,</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"expression (y)"</span>,</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"treatment (x)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">=</span> <span class="fu">makeContrasts</span>(</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  treatmentA<span class="sc">-</span>treatmentCTRL,</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  treatmentB<span class="sc">-</span>treatmentCTRL, </span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  treatmentC<span class="sc">-</span>treatmentCTRL,</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels=</span><span class="fu">colnames</span>(design))</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(contrasts) <span class="ot">&lt;-</span> <span class="fu">abbreviate</span>(<span class="fu">colnames</span>(contrasts))</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>contrasts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">=</span> <span class="fu">makeContrasts</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  treatmentA<span class="sc">-</span>treatmentCTRL,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  treatmentB<span class="sc">-</span>treatmentCTRL, </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  treatmentC<span class="sc">-</span>treatmentCTRL,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels=</span><span class="fu">colnames</span>(design))</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(contrasts) <span class="ot">&lt;-</span> <span class="fu">abbreviate</span>(<span class="fu">colnames</span>(contrasts))</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>contrasts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Contrasts
 Levels          tA-t tB-t tC-t
@@ -646,11 +659,23 @@ Levels          tA-t tB-t tC-t
   treatmentC       0    0    1</code></pre>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lmFit</span>(expression, design)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">=</span> <span class="fu">makeContrasts</span>(treatmentA <span class="sc">-</span> treatmentCTRL, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts.fit</span>(fit, contrasts)<span class="sc">$</span>coefficient</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Contrasts
+       treatmentA - treatmentCTRL
+  [1,]                      1.089</code></pre>
+</div>
+</div>
 </section>
 <section id="control-vs-the-rest" class="level3">
 <h3 class="anchored" data-anchor-id="control-vs-the-rest">Control vs the rest</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>((treatmentA <span class="sc">+</span> treatmentB <span class="sc">+</span> treatmentC)<span class="sc">/</span><span class="dv">3</span> <span class="sc">-</span> treatmentCTRL, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>((treatmentA <span class="sc">+</span> treatmentB <span class="sc">+</span> treatmentC)<span class="sc">/</span><span class="dv">3</span> <span class="sc">-</span> treatmentCTRL, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Contrasts
 Levels          (treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL
@@ -658,6 +683,18 @@ Levels          (treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL
   treatmentA                                                      0.3333
   treatmentB                                                      0.3333
   treatmentC                                                      0.3333</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lmFit</span>(expression, design)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">=</span> <span class="fu">makeContrasts</span>(treatmentB <span class="sc">-</span> treatmentA, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts.fit</span>(fit, contrasts)<span class="sc">$</span>coefficient</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Contrasts
+       treatmentB - treatmentA
+  [1,]                  0.8789</code></pre>
 </div>
 </div>
 </section>
@@ -668,7 +705,19 @@ Levels          (treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL
 <h3 class="anchored" data-anchor-id="interactions-using-a-single-factor-model">Interactions using a single factor model</h3>
 <p>Same as the multiple treatment models above but considering treatment C as the combination of treatment A and B and testing whether its effect (b3) equals the sum of the effects of A (b1) and B (b2).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"treatmentCTRL","2":"1.029","3":"0.07624","4":"13.50","5":"0.000000870339258"},{"1":"treatmentA","2":"2.118","3":"0.07624","4":"27.78","5":"0.000000003044079"},{"1":"treatmentB","2":"2.997","3":"0.07624","4":"39.31","5":"0.000000000192950"},{"1":"treatmentC","2":"4.900","3":"0.07624","4":"64.28","5":"0.000000000003817"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -677,7 +726,7 @@ Levels          (treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL
   </script>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">hypothesis =</span> <span class="st">"b3 = b1 + b2"</span>, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">hypothesis =</span> <span class="st">"b3 = b1 + b2"</span>, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -686,7 +735,7 @@ Levels          (treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL
   </script>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">hypothesis =</span> <span class="st">"b3 - b1 - b2 = 0"</span>, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">hypothesis =</span> <span class="st">"b3 - b1 - b2 = 0"</span>, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -700,11 +749,11 @@ Levels          (treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL
 <section id="interactions-using-a-two-factor-model" class="level3">
 <h3 class="anchored" data-anchor-id="interactions-using-a-two-factor-model">Interactions using a two-factor model</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>treat1 <span class="ot">&lt;-</span> <span class="fu">as_factor</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>treat2 <span class="ot">&lt;-</span> <span class="fu">as_factor</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(treat1) <span class="ot">=</span> <span class="fu">levels</span>(treat2) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"NO"</span>, <span class="st">"YES"</span>)</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, treat1, treat2)</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>treat1 <span class="ot">&lt;-</span> <span class="fu">as_factor</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>treat2 <span class="ot">&lt;-</span> <span class="fu">as_factor</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(treat1) <span class="ot">=</span> <span class="fu">levels</span>(treat2) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"NO"</span>, <span class="st">"YES"</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, treat1, treat2)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -715,7 +764,7 @@ Levels          (treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   (Intercept) treat1YES treat2YES treat1YES:treat2YES
 1            1         0         0                   0
@@ -741,8 +790,8 @@ attr(,"contrasts")$treat2
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2, data)</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> treat1 <span class="sc">*</span> treat2, data)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -753,7 +802,7 @@ attr(,"contrasts")$treat2
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -767,7 +816,7 @@ attr(,"contrasts")$treat2
 <section id="additivity-using-a-two-factor-model" class="level3">
 <h3 class="anchored" data-anchor-id="additivity-using-a-two-factor-model">Additivity using a two-factor model</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> treat1 <span class="sc">+</span> treat2, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> treat1 <span class="sc">+</span> treat2, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   (Intercept) treat1YES treat2YES
 1            1         0         0
@@ -793,8 +842,8 @@ attr(,"contrasts")$treat2
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> treat1 <span class="sc">+</span> treat2, data)</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> treat1 <span class="sc">+</span> treat2, data)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -805,7 +854,7 @@ attr(,"contrasts")$treat2
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -822,14 +871,14 @@ attr(,"contrasts")$treat2
 <section id="conversion-to-a-single-factor" class="level3">
 <h3 class="anchored" data-anchor-id="conversion-to-a-single-factor">Conversion to a single factor</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>tissue <span class="ot">=</span> treat1</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(tissue) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"LUNG"</span>, <span class="st">"BRAIN"</span>)</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>cells <span class="ot">=</span> treat2</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(cells) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"B"</span>, <span class="st">"T"</span>)</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">paste</span>(tissue, cells, <span class="at">sep=</span><span class="st">":"</span>)</span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">as_factor</span>(treatment)</span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, tissue, cells, treatment)</span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>tissue <span class="ot">=</span> treat1</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(tissue) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"LUNG"</span>, <span class="st">"BRAIN"</span>)</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>cells <span class="ot">=</span> treat2</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(cells) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"B"</span>, <span class="st">"T"</span>)</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">paste</span>(tissue, cells, <span class="at">sep=</span><span class="st">":"</span>)</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">as_factor</span>(treatment)</span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, tissue, cells, treatment)</span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -840,7 +889,7 @@ attr(,"contrasts")$treat2
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   treatmentLUNG:B treatmentBRAIN:B treatmentLUNG:T treatmentBRAIN:T
 1                1                0               0                0
@@ -863,8 +912,8 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data)</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -875,7 +924,7 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -889,13 +938,13 @@ attr(,"contrasts")$treatment
 <section id="accounting-for-factors-that-are-not-of-interest" class="level3">
 <h3 class="anchored" data-anchor-id="accounting-for-factors-that-are-not-of-interest">Accounting for factors that are not of interest</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">rep</span>(LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">each=</span><span class="dv">3</span>))</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>lane <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"L1"</span>, <span class="st">"L2"</span>), <span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">6</span>))</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>lane <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">sample</span>(lane, <span class="fu">length</span>(treatment), <span class="at">replace=</span><span class="cn">FALSE</span>))</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>technician <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"I"</span>, <span class="st">"II"</span>)</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>technician <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">sample</span>(technician, <span class="fu">length</span>(treatment), <span class="at">replace=</span><span class="cn">TRUE</span>))</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, treatment, lane, technician)</span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">rep</span>(LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">each=</span><span class="dv">3</span>))</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>lane <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"L1"</span>, <span class="st">"L2"</span>), <span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">6</span>))</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>lane <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">sample</span>(lane, <span class="fu">length</span>(treatment), <span class="at">replace=</span><span class="cn">FALSE</span>))</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>technician <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"I"</span>, <span class="st">"II"</span>)</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>technician <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">sample</span>(technician, <span class="fu">length</span>(treatment), <span class="at">replace=</span><span class="cn">TRUE</span>))</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, treatment, lane, technician)</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -906,7 +955,7 @@ attr(,"contrasts")$treatment
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment <span class="sc">+</span> lane <span class="sc">+</span> technician, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment <span class="sc">+</span> lane <span class="sc">+</span> technician, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   treatmentA treatmentB treatmentC treatmentD laneL1 technicianII
 1           1          0          0          0      0            0
@@ -935,8 +984,8 @@ attr(,"contrasts")$technician
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment <span class="sc">+</span> lane <span class="sc">+</span> technician, data)</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment <span class="sc">+</span> lane <span class="sc">+</span> technician, data)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -947,7 +996,7 @@ attr(,"contrasts")$technician
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(fit, <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>), <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(fit, <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>), <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -958,7 +1007,7 @@ attr(,"contrasts")$technician
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>), <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>), <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -969,16 +1018,15 @@ attr(,"contrasts")$technician
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>(treatmentA <span class="sc">-</span> treatmentB, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lmFit</span>(expression, design)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">=</span> <span class="fu">makeContrasts</span>(treatmentB <span class="sc">-</span> treatmentA, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts.fit</span>(fit, contrasts)<span class="sc">$</span>coefficient</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>              Contrasts
-Levels         treatmentA - treatmentB
-  treatmentA                         1
-  treatmentB                        -1
-  treatmentC                         0
-  treatmentD                         0
-  laneL1                             0
-  technicianII                       0</code></pre>
+<pre><code>      Contrasts
+       treatmentB - treatmentA
+  [1,]                    1.12</code></pre>
 </div>
 </div>
 </section>
@@ -987,7 +1035,7 @@ Levels         treatmentA - treatmentB
 <h2 class="anchored" data-anchor-id="studies-with-multiple-covariates-and-factors">Studies with multiple covariates (and factors)</h2>
 <p>XXX</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.2.2 (2022-10-31)
 Platform: x86_64-apple-darwin17.0 (64-bit)

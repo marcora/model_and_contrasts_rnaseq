@@ -150,6 +150,8 @@ ggplot(data, aes(x = x, y = y)) +
 
 ### Regression model for covariates
 
+A contrast is a linear combination of parameters/statistics. Another word for a linear combination is a weighted sum.
+
 $$
 \text{expression} = \beta_0 + \beta_1 \text{age}
 $$
@@ -246,6 +248,14 @@ ggplot(data, aes(y = expression, x = group)) +
 makeContrasts(groupKO - groupWT, levels=colnames(design))
 ```
 
+```{r}
+fit = lmFit(expression, design)
+
+contrasts = makeContrasts(groupKO - groupWT, levels=colnames(design))
+
+contrasts.fit(fit, contrasts)$coefficient
+```
+
 ## Design and contrast matrices
 
 XXX
@@ -338,10 +348,25 @@ colnames(contrasts) <- abbreviate(colnames(contrasts))
 contrasts
 ```
 
+```{r}
+fit = lmFit(expression, design)
+
+contrasts = makeContrasts(treatmentA - treatmentCTRL, levels=colnames(design))
+
+contrasts.fit(fit, contrasts)$coefficient
+```
+
 ### Control vs the rest
 
 ```{r}
 makeContrasts((treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL, levels=colnames(design))
+```
+```{r}
+fit = lmFit(expression, design)
+
+contrasts = makeContrasts(treatmentB - treatmentA, levels=colnames(design))
+
+contrasts.fit(fit, contrasts)$coefficient
 ```
 
 ## Studies of interactions and additivity of treatments
@@ -349,6 +374,11 @@ makeContrasts((treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL, levels=c
 ### Interactions using a single factor model
 
 Same as the multiple treatment models above but considering treatment C as the combination of treatment A and B and testing whether its effect (b3) equals the sum of the effects of A (b1) and B (b2).
+
+```{r}
+fit = lm(expression ~ 0 + treatment, data)
+tidy(fit)
+```
 
 ```{r}
 avg_comparisons(fit)
@@ -452,7 +482,11 @@ avg_comparisons(fit, variables = c("treatment"), df = insight::get_df(fit))
 ```
 
 ```{r}
-makeContrasts(treatmentA - treatmentB, levels=colnames(design))
+fit = lmFit(expression, design)
+
+contrasts = makeContrasts(treatmentB - treatmentA, levels=colnames(design))
+
+contrasts.fit(fit, contrasts)$coefficient
 ```
 
 ## Studies with multiple covariates (and factors)
