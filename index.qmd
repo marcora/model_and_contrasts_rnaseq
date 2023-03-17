@@ -5,13 +5,13 @@ format:
     df-print: paged
 ---
 
-## References
+## Sources
 
 [A guide to creating design matrices for gene expression experiments](https://f1000research.com/articles/9-1444/v1)
 
 [RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR](https://f1000research.com/articles/5-1408/v3)
 
-## Setup
+## Init
 
 ```{r}
 #| output: false
@@ -71,21 +71,21 @@ $$
 
 ![](images/image-158884090.png)
 
-### Deterministic vs stochastic/statistical linear regression model
+### Deterministic model
 
 $$
 y = a + b x
 $$
 
 ```{r}
-set.seed(1981)
+set.seed(2023)
 
 a = 2
 b = 2
 x = seq(2, 12, by = 2)
 y = a + b * x
-data = tibble(x, y)
-data
+
+(data = tibble(x, y))
 ```
 
 ```{r}
@@ -94,10 +94,12 @@ ggplot(data, aes(x = x, y = y)) +
   geom_abline(intercept = a, slope = b)
 ```
 
+### Stochastic/statistical model
+
 ```{r}
 y = a + b * x + rnorm(n = length(x), sd = 1)
-data = tibble(x, y)
-data
+
+(data = tibble(x, y))
 ```
 
 ```{r}
@@ -113,7 +115,7 @@ $$
 $$
 \begin{align}
 \mu_i & = \beta_0 + \beta_1 x_i \\
-& = \beta_0 \cdot 1 + \beta_1 \cdot x_i \\
+& = \beta_0 \cdot 1_i + \beta_1 \cdot x_i \\
 \end{align}
 $$
 
@@ -145,7 +147,7 @@ $$
 ggplot(data, aes(x = x, y = y)) +
   geom_point() +
   geom_abline(intercept = a, slope = b) +
-  geom_smooth(method = "lm", color = "orange")
+  geom_abline(intercept = fit$coefficients[1], slope = fit$coefficients[2], color = "orange") # + geom_smooth(method = "lm", color = "orange")
 ```
 
 ### Regression model for covariates
@@ -162,8 +164,8 @@ set.seed(20190429)
 mouse = paste0("MOUSE", 1:6)
 age = c(1,2,3,4,5,6)
 expression = 2 + 0.5 * age + rnorm(n = 6, sd = 0.1)
-data = tibble(mouse, expression, age)
-data
+
+(data = tibble(mouse, expression, age))
 ```
 
 ```{r}
@@ -191,24 +193,24 @@ ggplot(data, aes(y = expression, x = age)) +
 ### Means model for factors
 
 ```{r}
-group = fct_relevel(rep(c("WT", "KO"), each = 3), "WT")
-data = tibble(mouse, expression, group)
-data
+genotype = fct_relevel(rep(c("WT", "KO"), each = 3), "WT")
+
+(data = tibble(mouse, expression, genotype))
 ```
 
 ```{r}
-(design = model.matrix(expression ~ 1 + group, data))
+(design = model.matrix(expression ~ 1 + genotype, data))
 ```
 
 ```{r}
-fit = lm(expression ~ 1 + group, data)
+fit = lm(expression ~ 1 + genotype, data)
 tidy(fit)
 ```
 
 ```{r}
 model.name = paste0("E(y)=", round(fit$coef[1],2), "+", round(fit$coef[2],2), "*KO")
 
-ggplot(data, aes(y = expression, x = group)) +
+ggplot(data, aes(y = expression, x = genotype)) +
   geom_point() +
   geom_hline(yintercept = fit$coef[1],
              color = "red") +
@@ -216,24 +218,24 @@ ggplot(data, aes(y = expression, x = group)) +
              color = "blue") +
   labs(title = model.name,
        y = "expression (y)",
-       x = "group (x)")
+       x = "genotype (x)")
 ```
 
 ### Mean-reference model for factors
 
 ```{r}
-(design = model.matrix(expression ~ 0 + group, data))
+(design = model.matrix(expression ~ 0 + genotype, data))
 ```
 
 ```{r}
-fit = lm(expression ~ 0 + group, data)
+fit = lm(expression ~ 0 + genotype, data)
 tidy(fit)
 ```
 
 ```{r}
 model.name = paste0("E(y)=", round(fit$coef[1],2), "*WT", "+", round(fit$coef[2],2), "*KO")
 
-ggplot(data, aes(y = expression, x = group)) +
+ggplot(data, aes(y = expression, x = genotype)) +
   geom_point() +
   geom_hline(yintercept = fit$coef[1],
              color = "red") +
@@ -241,19 +243,25 @@ ggplot(data, aes(y = expression, x = group)) +
              color = "blue") +
   labs(title = model.name,
        y = "expression (y)",
-       x = "group (x)")
+       x = "genotype (x)")
 ```
 
 ```{r}
-makeContrasts(groupKO - groupWT, levels=colnames(design))
+avg_predictions(fit, df = insight::get_df(fit))
 ```
 
 ```{r}
-fit = lmFit(expression, design)
+(contrasts = makeContrasts(genotypeKO - genotypeWT, levels=colnames(design)))
+```
 
-contrasts = makeContrasts(groupKO - groupWT, levels=colnames(design))
+```{r}
+lmfit = lmFit(expression, design)
 
-contrasts.fit(fit, contrasts)$coefficient
+contrasts.fit(lmfit, contrasts)$coefficient
+```
+
+```{r}
+avg_comparisons(fit, df = insight::get_df(fit))
 ```
 
 ## Design and contrast matrices
@@ -266,12 +274,11 @@ XXX
 
 ```{r}
 treatment = as_factor(rep(c("CTRL", "A", "B", "C"), each=3))
-n = length(treatment)
 expression = rep(c(0,1,2,4), each=3) + 1
-expression = expression + rnorm(n, sd=0.1)
-mouse = paste0("MOUSE", 1:n)
-data = tibble(expression, mouse, treatment)
-data
+expression = expression + rnorm(length(treatment), sd=0.1)
+mouse = paste0("MOUSE", 1:length(treatment))
+
+(data = tibble(mouse, expression, treatment))
 ```
 
 ```{r}
@@ -315,6 +322,24 @@ tidy(fit)
 ```
 
 ```{r}
+avg_predictions(fit, by = "treatment", df = insight::get_df(fit))
+```
+
+```{r}
+(contrasts = makeContrasts(
+  treatmentA-treatmentCTRL,
+  treatmentB-treatmentCTRL, 
+  treatmentC-treatmentCTRL,
+  levels=colnames(design)))
+```
+
+```{r}
+lmfit = lmFit(expression, design)
+
+contrasts.fit(lmfit, contrasts)$coefficient
+```
+
+```{r}
 avg_comparisons(fit, df = insight::get_df(fit))
 ```
 
@@ -336,35 +361,14 @@ ggplot(data, aes(y = expression, x = treatment)) +
        x = "treatment (x)")
 ```
 
-```{r}
-contrasts = makeContrasts(
-  treatmentA-treatmentCTRL,
-  treatmentB-treatmentCTRL, 
-  treatmentC-treatmentCTRL,
-  levels=colnames(design))
-
-colnames(contrasts) <- abbreviate(colnames(contrasts))
-
-contrasts
-```
-
-```{r}
-fit = lmFit(expression, design)
-
-contrasts = makeContrasts(treatmentA - treatmentCTRL, levels=colnames(design))
-
-contrasts.fit(fit, contrasts)$coefficient
-```
-
 ### Control vs the rest
 
 ```{r}
-makeContrasts((treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL, levels=colnames(design))
+(contrasts = makeContrasts((treatmentA + treatmentB + treatmentC)/3 - treatmentCTRL, levels=colnames(design)))
 ```
+
 ```{r}
 fit = lmFit(expression, design)
-
-contrasts = makeContrasts(treatmentB - treatmentA, levels=colnames(design))
 
 contrasts.fit(fit, contrasts)$coefficient
 ```
@@ -381,8 +385,18 @@ tidy(fit)
 ```
 
 ```{r}
-avg_comparisons(fit)
+avg_predictions(fit, by = "treatment", df = insight::get_df(fit))
+```
+
+```{r}
+avg_comparisons(fit, df = insight::get_df(fit))
+```
+
+```{r}
 avg_comparisons(fit, hypothesis = "b3 = b1 + b2", df = insight::get_df(fit))
+```
+
+```{r}
 avg_comparisons(fit, hypothesis = "b3 - b1 - b2 = 0", df = insight::get_df(fit))
 ```
 
@@ -392,8 +406,8 @@ avg_comparisons(fit, hypothesis = "b3 - b1 - b2 = 0", df = insight::get_df(fit))
 treat1 <- as_factor(c(0,0,0,1,1,1,0,0,0,1,1,1))
 treat2 <- as_factor(c(0,0,0,0,0,0,1,1,1,1,1,1))
 levels(treat1) = levels(treat2) = c("NO", "YES")
-data = tibble(mouse, expression, treat1, treat2)
-data
+
+(data = tibble(mouse, expression, treat1, treat2))
 ```
 
 ```{r}
@@ -433,23 +447,23 @@ tissue = treat1
 levels(tissue) = c("LUNG", "BRAIN")
 cells = treat2
 levels(cells) = c("B", "T")
-treatment = paste(tissue, cells, sep=":")
-treatment = as_factor(treatment)
-data = tibble(mouse, expression, tissue, cells, treatment)
-data
+tissue_cells = paste(tissue, cells, sep="_")
+tissue_cells = as_factor(tissue_cells)
+
+(data = tibble(mouse, expression, tissue, cells, tissue_cells))
 ```
 
 ```{r}
-(design = model.matrix(expression ~ 0 + treatment, data))
+(design = model.matrix(expression ~ 0 + tissue_cells, data))
 ```
 
 ```{r}
-fit = lm(expression ~ 0 + treatment, data)
+fit = lm(expression ~ 0 + tissue_cells, data)
 tidy(fit)
 ```
 
 ```{r}
-avg_comparisons(fit, df = insight::get_df(fit))
+avg_predictions(fit, by = "tissue_cells", df = insight::get_df(fit))
 ```
 
 ### Accounting for factors that are not of interest
@@ -460,8 +474,8 @@ lane = rep(c("L1", "L2"), c(6,6))
 lane = as_factor(sample(lane, length(treatment), replace=FALSE))
 technician = c("I", "II")
 technician = as_factor(sample(technician, length(treatment), replace=TRUE))
-data = tibble(mouse, expression, treatment, lane, technician)
-data
+
+(data = tibble(mouse, expression, treatment, lane, technician))
 ```
 
 ```{r}
@@ -474,19 +488,24 @@ tidy(fit)
 ```
 
 ```{r}
-avg_predictions(fit, variables = c("treatment"), df = insight::get_df(fit))
+avg_predictions(fit, by = "treatment", df = insight::get_df(fit))
+```
+
+```{r}
+(contrasts = makeContrasts(treatmentB - treatmentA,
+                           treatmentC - treatmentA,
+                           treatmentD - treatmentA,
+                           levels=colnames(design)))
+```
+
+```{r}
+lmfit = lmFit(expression, design)
+
+contrasts.fit(lmfit, contrasts)$coefficient
 ```
 
 ```{r}
 avg_comparisons(fit, variables = c("treatment"), df = insight::get_df(fit))
-```
-
-```{r}
-fit = lmFit(expression, design)
-
-contrasts = makeContrasts(treatmentB - treatmentA, levels=colnames(design))
-
-contrasts.fit(fit, contrasts)$coefficient
 ```
 
 ## Studies with multiple covariates (and factors)
