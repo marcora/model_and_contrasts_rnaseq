@@ -819,55 +819,57 @@ attr(,"contrasts")$treat2
 </section>
 <section id="studies-with-multiple-factors" class="level2">
 <h2 class="anchored" data-anchor-id="studies-with-multiple-factors">Studies with multiple factors</h2>
+<section id="conversion-to-a-single-factor" class="level3">
+<h3 class="anchored" data-anchor-id="conversion-to-a-single-factor">Conversion to a single factor</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>tissue <span class="ot">=</span> treat1</span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(tissue) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"LUNG"</span>, <span class="st">"BRAIN"</span>)</span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>cells <span class="ot">=</span> treat2</span>
 <span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(cells) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"B"</span>, <span class="st">"T"</span>)</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>grp <span class="ot">=</span> <span class="fu">paste</span>(tissue, cells, <span class="at">sep=</span><span class="st">":"</span>)</span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>grp <span class="ot">=</span> <span class="fu">as_factor</span>(grp)</span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, tissue, cells, grp)</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">paste</span>(tissue, cells, <span class="at">sep=</span><span class="st">":"</span>)</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">as_factor</span>(treatment)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, tissue, cells, treatment)</span>
 <span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["tissue"],"name":[3],"type":["fct"],"align":["left"]},{"label":["cells"],"name":[4],"type":["fct"],"align":["left"]},{"label":["grp"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"1.008","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE2","2":"1.036","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE3","2":"1.043","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE4","2":"1.993","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE5","2":"2.359","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE6","2":"2.002","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE7","2":"2.888","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE8","2":"3.123","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE9","2":"2.979","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE10","2":"4.999","3":"BRAIN","4":"T","5":"BRAIN:T"},{"1":"MOUSE11","2":"4.918","3":"BRAIN","4":"T","5":"BRAIN:T"},{"1":"MOUSE12","2":"4.784","3":"BRAIN","4":"T","5":"BRAIN:T"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["tissue"],"name":[3],"type":["fct"],"align":["left"]},{"label":["cells"],"name":[4],"type":["fct"],"align":["left"]},{"label":["treatment"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"1.008","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE2","2":"1.036","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE3","2":"1.043","3":"LUNG","4":"B","5":"LUNG:B"},{"1":"MOUSE4","2":"1.993","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE5","2":"2.359","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE6","2":"2.002","3":"BRAIN","4":"B","5":"BRAIN:B"},{"1":"MOUSE7","2":"2.888","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE8","2":"3.123","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE9","2":"2.979","3":"LUNG","4":"T","5":"LUNG:T"},{"1":"MOUSE10","2":"4.999","3":"BRAIN","4":"T","5":"BRAIN:T"},{"1":"MOUSE11","2":"4.918","3":"BRAIN","4":"T","5":"BRAIN:T"},{"1":"MOUSE12","2":"4.784","3":"BRAIN","4":"T","5":"BRAIN:T"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> grp, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   grpLUNG:B grpBRAIN:B grpLUNG:T grpBRAIN:T
-1          1          0         0          0
-2          1          0         0          0
-3          1          0         0          0
-4          0          1         0          0
-5          0          1         0          0
-6          0          1         0          0
-7          0          0         1          0
-8          0          0         1          0
-9          0          0         1          0
-10         0          0         0          1
-11         0          0         0          1
-12         0          0         0          1
+<pre><code>   treatmentLUNG:B treatmentBRAIN:B treatmentLUNG:T treatmentBRAIN:T
+1                1                0               0                0
+2                1                0               0                0
+3                1                0               0                0
+4                0                1               0                0
+5                0                1               0                0
+6                0                1               0                0
+7                0                0               1                0
+8                0                0               1                0
+9                0                0               1                0
+10               0                0               0                1
+11               0                0               0                1
+12               0                0               0                1
 attr(,"assign")
 [1] 1 1 1 1
 attr(,"contrasts")
-attr(,"contrasts")$grp
+attr(,"contrasts")$treatment
 [1] "contr.treatment"</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> grp, data)</span>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment, data)</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"grpLUNG:B","2":"1.029","3":"0.07624","4":"13.50","5":"0.000000870339258"},{"1":"grpBRAIN:B","2":"2.118","3":"0.07624","4":"27.78","5":"0.000000003044079"},{"1":"grpLUNG:T","2":"2.997","3":"0.07624","4":"39.31","5":"0.000000000192950"},{"1":"grpBRAIN:T","2":"4.900","3":"0.07624","4":"64.28","5":"0.000000000003817"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"treatmentLUNG:B","2":"1.029","3":"0.07624","4":"13.50","5":"0.000000870339258"},{"1":"treatmentBRAIN:B","2":"2.118","3":"0.07624","4":"27.78","5":"0.000000003044079"},{"1":"treatmentLUNG:T","2":"2.997","3":"0.07624","4":"39.31","5":"0.000000000192950"},{"1":"treatmentBRAIN:T","2":"4.900","3":"0.07624","4":"64.28","5":"0.000000000003817"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -878,17 +880,114 @@ attr(,"contrasts")$grp
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"grp","2":"BRAIN:B - LUNG:B","3":"1.089","4":"0.1078","5":"10.10","6":"0.0000078966186","7":"0.840","8":"1.337","9":"8"},{"1":"grp","2":"BRAIN:T - LUNG:B","3":"3.871","4":"0.1078","5":"35.91","6":"0.0000000003965","7":"3.623","8":"4.120","9":"8"},{"1":"grp","2":"LUNG:T - LUNG:B","3":"1.967","4":"0.1078","5":"18.25","6":"0.0000000836042","7":"1.719","8":"2.216","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"BRAIN:B - LUNG:B","3":"1.089","4":"0.1078","5":"10.10","6":"0.0000078966186","7":"0.840","8":"1.337","9":"8"},{"1":"treatment","2":"BRAIN:T - LUNG:B","3":"3.871","4":"0.1078","5":"35.91","6":"0.0000000003965","7":"3.623","8":"4.120","9":"8"},{"1":"treatment","2":"LUNG:T - LUNG:B","3":"1.967","4":"0.1078","5":"18.25","6":"0.0000000836042","7":"1.719","8":"2.216","9":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 </section>
+<section id="accounting-for-factors-that-are-not-of-interest" class="level3">
+<h3 class="anchored" data-anchor-id="accounting-for-factors-that-are-not-of-interest">Accounting for factors that are not of interest</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">rep</span>(LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">each=</span><span class="dv">3</span>))</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>lane <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"L1"</span>, <span class="st">"L2"</span>), <span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">6</span>))</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>lane <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">sample</span>(lane, <span class="fu">length</span>(treatment), <span class="at">replace=</span><span class="cn">FALSE</span>))</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>technician <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"I"</span>, <span class="st">"II"</span>)</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>technician <span class="ot">=</span> <span class="fu">as_factor</span>(<span class="fu">sample</span>(technician, <span class="fu">length</span>(treatment), <span class="at">replace=</span><span class="cn">TRUE</span>))</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(mouse, expression, treatment, lane, technician)</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["mouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["expression"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["treatment"],"name":[3],"type":["fct"],"align":["left"]},{"label":["lane"],"name":[4],"type":["fct"],"align":["left"]},{"label":["technician"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"MOUSE1","2":"1.008","3":"A","4":"L2","5":"I"},{"1":"MOUSE2","2":"1.036","3":"A","4":"L2","5":"I"},{"1":"MOUSE3","2":"1.043","3":"A","4":"L1","5":"II"},{"1":"MOUSE4","2":"1.993","3":"B","4":"L1","5":"I"},{"1":"MOUSE5","2":"2.359","3":"B","4":"L2","5":"II"},{"1":"MOUSE6","2":"2.002","3":"B","4":"L1","5":"I"},{"1":"MOUSE7","2":"2.888","3":"C","4":"L1","5":"II"},{"1":"MOUSE8","2":"3.123","3":"C","4":"L2","5":"II"},{"1":"MOUSE9","2":"2.979","3":"C","4":"L1","5":"I"},{"1":"MOUSE10","2":"4.999","3":"D","4":"L1","5":"II"},{"1":"MOUSE11","2":"4.918","3":"D","4":"L2","5":"II"},{"1":"MOUSE12","2":"4.784","3":"D","4":"L2","5":"I"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">design =</span> <span class="fu">model.matrix</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment <span class="sc">+</span> lane <span class="sc">+</span> technician, data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   treatmentA treatmentB treatmentC treatmentD laneL1 technicianII
+1           1          0          0          0      0            0
+2           1          0          0          0      0            0
+3           1          0          0          0      1            1
+4           0          1          0          0      1            0
+5           0          1          0          0      0            1
+6           0          1          0          0      1            0
+7           0          0          1          0      1            1
+8           0          0          1          0      0            1
+9           0          0          1          0      1            0
+10          0          0          0          1      1            1
+11          0          0          0          1      0            1
+12          0          0          0          1      0            0
+attr(,"assign")
+[1] 1 1 1 1 2 3
+attr(,"contrasts")
+attr(,"contrasts")$treatment
+[1] "contr.treatment"
+
+attr(,"contrasts")$lane
+[1] "contr.treatment"
+
+attr(,"contrasts")$technician
+[1] "contr.treatment"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(expression <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment <span class="sc">+</span> lane <span class="sc">+</span> technician, data)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"treatmentA","2":"1.01220","3":"0.06364","4":"15.906","5":"0.0000039189390"},{"1":"treatmentB","2":"2.13262","3":"0.07256","4":"29.393","5":"0.0000001027911"},{"1":"treatmentC","2":"2.96279","3":"0.08049","4":"36.808","5":"0.0000000268298"},{"1":"treatmentD","2":"4.83465","3":"0.07256","4":"66.634","5":"0.0000000007684"},{"1":"laneL1","2":"-0.09543","3":"0.06037","4":"-1.581","5":"0.1650273095423"},{"1":"technicianII","2":"0.14606","3":"0.06037","4":"2.419","5":"0.0519050302946"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(fit, <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>), <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["treatment"],"name":[1],"type":["fct"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[8],"type":["int"],"align":["right"]}],"data":[{"1":"A","2":"1.052","3":"0.06000","4":"17.54","5":"0.0000022068201","6":"0.9053","7":"1.199","8":"6"},{"1":"B","2":"2.173","3":"0.06000","4":"36.21","5":"0.0000000295929","6":"2.0257","7":"2.319","8":"6"},{"1":"C","2":"3.003","3":"0.05794","4":"51.82","5":"0.0000000034637","6":"2.8609","7":"3.144","8":"6"},{"1":"D","2":"4.875","3":"0.05794","4":"84.13","5":"0.0000000001899","6":"4.7328","7":"5.016","8":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>), <span class="at">df =</span> insight<span class="sc">::</span><span class="fu">get_df</span>(fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["contrast"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"treatment","2":"B - A","3":"1.120","4":"0.08297","5":"13.50","6":"0.000010224453","7":"0.9174","8":"1.323","9":"6"},{"1":"treatment","2":"C - A","3":"1.951","4":"0.08538","5":"22.85","6":"0.000000460570","7":"1.7417","8":"2.159","9":"6"},{"1":"treatment","2":"D - A","3":"3.822","4":"0.08297","5":"46.07","6":"0.000000007008","7":"3.6194","8":"4.025","9":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makeContrasts</span>(treatmentA <span class="sc">-</span> treatmentB, <span class="at">levels=</span><span class="fu">colnames</span>(design))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Contrasts
+Levels         treatmentA - treatmentB
+  treatmentA                         1
+  treatmentB                        -1
+  treatmentC                         0
+  treatmentD                         0
+  laneL1                             0
+  technicianII                       0</code></pre>
+</div>
+</div>
+</section>
+</section>
 <section id="studies-with-multiple-covariates-and-factors" class="level2">
 <h2 class="anchored" data-anchor-id="studies-with-multiple-covariates-and-factors">Studies with multiple covariates (and factors)</h2>
 <p>XXX</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.2.2 (2022-10-31)
 Platform: x86_64-apple-darwin17.0 (64-bit)
@@ -913,8 +1012,8 @@ other attached packages:
 
 loaded via a namespace (and not attached):
  [1] tidyselect_1.2.0  xfun_0.37         splines_4.2.2     lattice_0.20-45  
- [5] colorspace_2.1-0  vctrs_0.5.2       generics_0.1.3    htmltools_0.5.4  
- [9] yaml_2.3.7        mgcv_1.8-42       utf8_1.2.3        rlang_1.0.6      
+ [5] colorspace_2.1-0  vctrs_0.6.0       generics_0.1.3    htmltools_0.5.4  
+ [9] yaml_2.3.7        mgcv_1.8-42       utf8_1.2.3        rlang_1.1.0      
 [13] pillar_1.8.1      glue_1.6.2        withr_2.5.0       lifecycle_1.0.3  
 [17] munsell_0.5.0     gtable_0.3.1      htmlwidgets_1.6.1 evaluate_0.20    
 [21] labeling_0.4.2    knitr_1.42        tzdb_0.3.0        fastmap_1.1.1    

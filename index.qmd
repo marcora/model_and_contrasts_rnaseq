@@ -396,28 +396,63 @@ avg_comparisons(fit, df = insight::get_df(fit))
 
 ## Studies with multiple factors
 
+### Conversion to a single factor
+
 ```{r}
 tissue = treat1
 levels(tissue) = c("LUNG", "BRAIN")
 cells = treat2
 levels(cells) = c("B", "T")
-grp = paste(tissue, cells, sep=":")
-grp = as_factor(grp)
-data = tibble(mouse, expression, tissue, cells, grp)
+treatment = paste(tissue, cells, sep=":")
+treatment = as_factor(treatment)
+data = tibble(mouse, expression, tissue, cells, treatment)
 data
 ```
 
 ```{r}
-(design = model.matrix(expression ~ 0 + grp, data))
+(design = model.matrix(expression ~ 0 + treatment, data))
 ```
 
 ```{r}
-fit = lm(expression ~ 0 + grp, data)
+fit = lm(expression ~ 0 + treatment, data)
 tidy(fit)
 ```
 
 ```{r}
 avg_comparisons(fit, df = insight::get_df(fit))
+```
+
+### Accounting for factors that are not of interest
+
+```{r}
+treatment = as_factor(rep(LETTERS[1:4], each=3))
+lane = rep(c("L1", "L2"), c(6,6))
+lane = as_factor(sample(lane, length(treatment), replace=FALSE))
+technician = c("I", "II")
+technician = as_factor(sample(technician, length(treatment), replace=TRUE))
+data = tibble(mouse, expression, treatment, lane, technician)
+data
+```
+
+```{r}
+(design = model.matrix(expression ~ 0 + treatment + lane + technician, data))
+```
+
+```{r}
+fit = lm(expression ~ 0 + treatment + lane + technician, data)
+tidy(fit)
+```
+
+```{r}
+avg_predictions(fit, variables = c("treatment"), df = insight::get_df(fit))
+```
+
+```{r}
+avg_comparisons(fit, variables = c("treatment"), df = insight::get_df(fit))
+```
+
+```{r}
+makeContrasts(treatmentA - treatmentB, levels=colnames(design))
 ```
 
 ## Studies with multiple covariates (and factors)
